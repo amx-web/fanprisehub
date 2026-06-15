@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Giveaway - Enter Now!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .prize-showcase {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .prize-image {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .prize-image img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .prize-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .prize-info p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .entry-form {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .entry-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4CAF50;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-proof {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .social-proof p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .participants {
+            display: flex;
+            justify-content: center;
+            gap: -15px;
+            flex-wrap: wrap;
+        }
+        
+        .participant-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+        
+        .more-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .more-info h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .more-info ul {
+            max-width: 600px;
+            margin: 0 auto;
+            list-style: none;
+        }
+        
+        .more-info li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .more-info li:last-child {
+            border-bottom: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .success-message h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .success-message p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .share-btn {
+            padding: 10px 20px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .entry-form {
+                padding: 25px;
+            }
+            
+            .prize-showcase {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">GiveawayHub</a>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>🎉 Win a $100 Amazon Gift Card! 🎉</h1>
+                <p>Enter our exclusive giveaway for a chance to win amazing prizes. No purchase necessary!</p>
+                
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="minutes">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="seconds">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+                
+                <div class="prize-showcase">
+                    <div class="prize-image">
+                        <img src="https://via.placeholder.com/150x150/FF9900/FFFFFF?text=$100" alt="$100 Amazon Gift Card">
+                    </div>
+                    <div class="prize-info">
+                        <h3>🏆 Grand Prize</h3>
+                        <p>$100 Amazon Gift Card</p>
+                    </div>
+                </div>
+                
+                <div class="social-proof">
+                    <p>🔥 <strong>1,247</strong> people have already entered!</p>
+                    <div class="participants">
+                        <div class="participant-avatar">J</div>
+                        <div class="participant-avatar">S</div>
+                        <div class="participant-avatar">M</div>
+                        <div class="participant-avatar">L</div>
+                        <div class="participant-avatar">A</div>
+                        <div class="participant-avatar">+</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="container">
+            <div class="entry-form" id="entryForm">
+                <h2>🎟️ Enter the Giveaway</h2>
+                <form id="giveawayEntry">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <select id="country" required>
+                            <option value="">Select your country</option>
+                            <option value="🇺🇸 United States">🇺🇸 United States</option>
+                            <option value="🇬🇧 United Kingdom">🇬🇧 United Kingdom</option>
+                            <option value="🇨🇦 Canada">🇨🇦 Canada</option>
+                            <option value="🇦🇺 Australia">🇦🇺 Australia</option>
+                            <option value="🇮🇳 India">🇮🇳 India</option>
+                            <option value="🇨🇳 China">🇨🇳 China</option>
+                            <option value="🇯🇵 Japan">🇯🇵 Japan</option>
+                            <option value="🇩🇪 Germany">🇩🇪 Germany</option>
+                            <option value="🇫🇷 France">🇫🇷 France</option>
+                            <option value="🇧🇷 Brazil">🇧🇷 Brazil</option>
+                            <option value="🇲🇽 Mexico">🇲🇽 Mexico</option>
+                            <option value="🇳🇬 Nigeria">🇳🇬 Nigeria</option>
+                            <option value="🇿🇦 South Africa">🇿🇦 South Africa</option>
+                            <option value="🇷🇺 Russia">🇷🇺 Russia</option>
+                            <option value="🇮🇩 Indonesia">🇮🇩 Indonesia</option>
+                            <option value="🇵🇰 Pakistan">🇵🇰 Pakistan</option>
+                            <option value="🇧🇩 Bangladesh">🇧🇩 Bangladesh</option>
+                            <option value="🇵🇭 Philippines">🇵🇭 Philippines</option>
+                            <option value="🇪🇬 Egypt">🇪🇬 Egypt</option>
+                            <option value="🇸🇦 Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                            <option value="🇦🇪 UAE">🇦🇪 UAE</option>
+                            <option value="🇹🇷 Turkey">🇹🇷 Turkey</option>
+                            <option value="🇳🇱 Netherlands">🇳🇱 Netherlands</option>
+                            <option value="🇮🇹 Italy">🇮🇹 Italy</option>
+                            <option value="🇪🇸 Spain">🇪🇸 Spain</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="referral">How did you hear about us?</label>
+                        <select id="referral">
+                            <option value="No referral">Select an option</option>
+                            <option value="Friend or Family">Friend or Family</option>
+                            <option value="Social Media">Social Media (Facebook, Instagram, etc.)</option>
+                            <option value="Email Newsletter">Email Newsletter</option>
+                            <option value="Search Engine">Search Engine (Google, Bing, etc.)</option>
+                            <option value="Influencer">Influencer or Blog</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Enter Giveaway Now!</button>
+                </form>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">🎉</div>
+                <h2>Congratulations!</h2>
+                <p>You've successfully entered the giveaway! The winner will be announced after the giveaway ends. Good luck!</p>
+                <div class="share-buttons">
+                    <button class="share-btn" onclick="shareOnFacebook()">
+                        📘 Share on Facebook
+                    </button>
+                    <button class="share-btn" onclick="shareOnTwitter()">
+                        🐦 Share on Twitter
+                    </button>
+                </div>
+                <button onclick="backToForm()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer;">Back to Form</button>
+            </div>
+            
+            <div class="more-info">
+                <div class="container">
+                    <h3>❓ Frequently Asked Questions</h3>
+                    <ul>
+                        <li><strong>Who can enter?</strong> This giveaway is open to participants worldwide.</li>
+                        <li><strong>How is the winner selected?</strong> Winners are chosen randomly from all valid entries.</li>
+                        <li><strong>When will the winner be announced?</strong> The winner will be announced within 48 hours after the giveaway ends.</li>
+                        <li><strong>How will I know if I win?</strong> Winners will be contacted via the email provided during entry.</li>
+                        <li><strong>Is there any cost to enter?</strong> No, this giveaway is completely free to enter.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 GiveawayHub. All rights reserved. | <a href="#" style="color: white;">Terms & Conditions</a> | <a href="#" style="color: white;">Privacy Policy</a></p>
+        </div>
+    </footer>
+    
+    <script>
+        // Set giveaway end date (7 days from now)
+        const giveawayEndDate = new Date();
+        giveawayEndDate.setDate(giveawayEndDate.getDate() + 7);
+        giveawayEndDate.setHours(23, 59, 59, 999);
+        
+        // Update countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const diff = giveawayEndDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = '<p style="font-size: 1.2rem; margin: 0;">Giveaway has ended!</p>';
+                document.getElementById('giveawayEntry').innerHTML = '<p style="text-align: center; color: #f44336;">This giveaway has ended. Thanks for participating!</p>';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Update countdown every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Form submission
+        document.getElementById('giveawayEntry').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const country = document.getElementById('country').value;
+            const referral = document.getElementById('referral').value;
+            
+            // Simple validation
+            if (!name || !email || !country) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Simple email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            // Store entry (in a real app, this would go to a server)
+            const entry = {
+                name: name,
+                email: email,
+                country: country,
+                referral: referral,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to localStorage for demo purposes
+            let entries = JSON.parse(localStorage.getItem('giveawayEntries')) || [];
+            entries.push(entry);
+            localStorage.setItem('giveawayEntries', JSON.stringify(entries));
+            
+            // Show success message
+            document.getElementById('entryForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Update participant count
+            const participantCount = entries.length;
+            document.querySelector('.social-proof p strong').textContent = participantCount.toLocaleString();
+        });
+        
+        // Share functions
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('I just entered this amazing giveaway! You should too:');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+        }
+        
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('I just entered this amazing giveaway! You should too:');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+        
+        function backToForm() {
+            document.getElementById('entryForm').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('giveawayEntry').reset();
+        }
+        
+        // Load participant count
+        window.addEventListener('load', function() {
+            const entries = JSON.parse(localStorage.getItem('giveawayEntries')) || [];
+            if (entries.length > 0) {
+                document.querySelector('.social-proof p strong').textContent = entries.length.toLocaleString();
+            }
+        });
+    </script>
+</body>
+</html>

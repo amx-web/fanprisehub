@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinBig20K - $20,000 Giveaway</title>
+    <meta name="description"
+        content="Enter our $20,000 cash giveaway! Professional giveaway platform with transparent rules.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/white-texture.png');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        .prize-showcase {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .prize-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .prize-image {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .prize-image i {
+            font-size: 3rem;
+            color: #ffd700;
+        }
+
+        .cta-button {
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            min-width: 100px;
+        }
+
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        /* Social Proof */
+        .social-proof {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .participant-avatars {
+            display: flex;
+            gap: -10px;
+        }
+
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* How It Works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .step-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .step-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Rules Section */
+        .rules-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        .rules-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .rule-item {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .rule-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-item p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Entry Form */
+        .entry-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* FAQ */
+        .faq-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f0f9ff;
+        }
+
+        .faq-answer {
+            padding: 0 20px 20px;
+            display: none;
+            color: var(--gray);
+            animation: fadeIn 0.3s;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        /* Testimonial Popup */
+        .testimonial-popup {
+            position: fixed;
+            top: 100px;
+            /* Move to top */
+            right: 20px;
+            background: white;
+            padding: 12px 15px;
+            /* Smaller padding */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 250px;
+            /* Limit width */
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 10000;
+        }
+
+        .testimonial-popup.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .testimonial-popup .close-btn {
+            font-size: 1.2rem;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .testimonial-popup .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-popup .testimonial-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .testimonial-popup .testimonial-info h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+
+        .testimonial-popup .testimonial-text {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--gray);
+            margin: 0;
+            line-height: 1.4;
+            word-wrap: break-word;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal-text {
+            margin-bottom: 30px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .steps-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Mobile-specific fixes */
+            .cta-button {
+                padding: 16px 30px;
+                font-size: 1rem;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .countdown {
+                gap: 10px;
+            }
+
+            .countdown-item {
+                min-width: 80px;
+                padding: 10px 15px;
+            }
+
+            .countdown-value {
+                font-size: 2rem;
+            }
+
+            .entry-form {
+                padding: 30px 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .social-proof {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content {
+                padding: 0 15px;
+            }
+
+            .prize-showcase {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .countdown-value {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+
+            .btn {
+                padding: 12px 18px;
+                font-size: 13px;
+            }
+
+            .testimonial-popup {
+                max-width: 90%;
+                right: 10px;
+                left: 10px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <span>🎉</span>
+                    <span>WinBig20K</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#rules">Rules</a></li>
+                    <li><a href="#entry">Enter</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-secondary">Login</a>
+                    <a href="#" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Win <span class="prize-amount">$20,000</span> Cash!</h1>
+            <p>Enter our exclusive giveaway for your chance to win life-changing money. No purchase necessary!</p>
+
+            <div class="prize-showcase">
+                <div class="prize-image">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>
+                    <h2 style="font-size: 2rem; margin-bottom: 5px;">Grand Prize</h2>
+                    <p style="font-size: 1.2rem;">$20,000 Cash</p>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="scrollToEntry()">
+                <i class="fas fa-gift"></i> Enter Giveaway Now!
+            </button>
+
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-value" id="days">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="seconds">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+
+            <div class="social-proof">
+                <div>
+                    <p><strong id="participantCount">1,247+</strong> people have entered</p>
+                </div>
+                <div class="participant-avatars" id="participantAvatars">
+                    <!-- Avatars will be added by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Entering our giveaway is simple and takes less than a minute. Follow these easy steps!</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card animate-fade-in">
+                    <div class="step-icon">📝</div>
+                    <h3>Step 1: Register</h3>
+                    <p>Create your free account or sign in if you already have one. No credit card required!</p>
+                </div>
+                <div class="step-card animate-fade-in" style="animation-delay: 0.1s">
+                    <div class="step-icon">🎟️</div>
+                    <h3>Step 2: Enter</h3>
+                    <p>Fill out the entry form with your details. Make sure to use a valid email address!</p>
+                </div>
+                <div class="step-card animate-fade-in" style="animation-delay: 0.2s">
+                    <div class="step-icon">🤞</div>
+                    <h3>Step 3: Wait</h3>
+                    <p>Relax and wait for the draw date. We'll announce winners via email and on this page.</p>
+                </div>
+                <div class="step-card animate-fade-in" style="animation-delay: 0.3s">
+                    <div class="step-icon">💰</div>
+                    <h3>Step 4: Win</h3>
+                    <p>If you win, we'll contact you with instructions to claim your $20,000 cash prize!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules Section -->
+    <section class="section rules-section" id="rules">
+        <div class="container">
+            <div class="section-title">
+                <h2>Official Rules</h2>
+                <p>Please read these rules carefully before entering our giveaway.</p>
+            </div>
+            <div class="rules-content">
+                <div class="rule-item animate-fade-in">
+                    <h3><i class="fas fa-calendar-alt"></i> Eligibility</h3>
+                    <p>This giveaway is open to legal residents worldwide who are at least 18 years old at the time of
+                        entry. Employees of WinBig20K and their immediate families are not eligible to participate.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.1s">
+                    <h3><i class="fas fa-clock"></i> Giveaway Period</h3>
+                    <p>The giveaway begins on [Start Date] and ends on [End Date] at 11:59 PM EST. All entries must be
+                        received during this period to be eligible for the prize.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.2s">
+                    <h3><i class="fas fa-ticket-alt"></i> How to Enter</h3>
+                    <p>Complete the official entry form with your name, email, country, and referral source. Limit one
+                        entry per person. Multiple entries from the same individual will be disqualified.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.3s">
+                    <h3><i class="fas fa-user-check"></i> Winner Selection</h3>
+                    <p>One winner will be selected randomly from all eligible entries within 48 hours after the giveaway
+                        ends. The winner will be notified via email and announced on this website.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.4s">
+                    <h3><i class="fas fa-gift"></i> Prize</h3>
+                    <p>The winner will receive $20,000 USD via bank transfer, PayPal, or other mutually agreed upon
+                        method. The prize is non-transferable and no substitution or cash equivalent will be offered.
+                    </p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.5s">
+                    <h3><i class="fas fa-shield-alt"></i> Privacy</h3>
+                    <p>Your personal information will only be used for the purpose of this giveaway and will not be
+                        shared with third parties without your consent. All data is protected according to our privacy
+                        policy.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.6s">
+                    <h3><i class="fas fa-ban"></i> Prohibited Actions</h3>
+                    <p>Any attempt to manipulate the giveaway through automated entries, fake accounts, or other
+                        fraudulent means will result in immediate disqualification and potential legal action.</p>
+                </div>
+
+                <div class="rule-item animate-fade-in" style="animation-delay: 0.7s">
+                    <h3><i class="fas fa-gavel"></i> Legal</h3>
+                    <p>This giveaway is void where prohibited by law. Winners may be required to complete an affidavit
+                        of eligibility and liability release before receiving their prize.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Entry Form Section -->
+    <section class="section" id="entry">
+        <div class="container">
+            <div class="section-title">
+                <h2>Enter the Giveaway</h2>
+                <p>Fill out the form below for your chance to win $20,000!</p>
+            </div>
+            <div class="entry-form">
+                <form id="giveawayEntryForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select your country</option>
+                            <option value="🇺🇸 United States">🇺🇸 United States</option>
+                            <option value="🇬🇧 United Kingdom">🇬🇧 United Kingdom</option>
+                            <option value="🇨🇦 Canada">🇨🇦 Canada</option>
+                            <option value="🇦🇺 Australia">🇦🇺 Australia</option>
+                            <option value="🇮🇳 India">🇮🇳 India</option>
+                            <option value="🇨🇳 China">🇨🇳 China</option>
+                            <option value="🇯🇵 Japan">🇯🇵 Japan</option>
+                            <option value="🇩🇪 Germany">🇩🇪 Germany</option>
+                            <option value="🇫🇷 France">🇫🇷 France</option>
+                            <option value="🇧🇷 Brazil">🇧🇷 Brazil</option>
+                            <option value="🇲🇽 Mexico">🇲🇽 Mexico</option>
+                            <option value="🇳🇬 Nigeria">🇳🇬 Nigeria</option>
+                            <option value="🇿🇦 South Africa">🇿🇦 South Africa</option>
+                            <option value="🇷🇺 Russia">🇷🇺 Russia</option>
+                            <option value="🇮🇩 Indonesia">🇮🇩 Indonesia</option>
+                            <option value="🇵🇰 Pakistan">🇵🇰 Pakistan</option>
+                            <option value="🇧🇩 Bangladesh">🇧🇩 Bangladesh</option>
+                            <option value="🇵🇭 Philippines">🇵🇭 Philippines</option>
+                            <option value="🇪🇬 Egypt">🇪🇬 Egypt</option>
+                            <option value="🇸🇦 Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                            <option value="🇦🇪 UAE">🇦🇪 UAE</option>
+                            <option value="🇹🇷 Turkey">🇹🇷 Turkey</option>
+                            <option value="🇳🇱 Netherlands">🇳🇱 Netherlands</option>
+                            <option value="🇮🇹 Italy">🇮🇹 Italy</option>
+                            <option value="🇪🇸 Spain">🇪🇸 Spain</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral">How did you hear about us?</label>
+                        <select id="referral" name="referral">
+                            <option value="No referral">Select an option</option>
+                            <option value="Friend or Family">Friend or Family</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Email Newsletter">Email Newsletter</option>
+                            <option value="Search Engine">Search Engine</option>
+                            <option value="Influencer">Influencer/Blog</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms" name="terms" required>
+                            I agree to the <a href="#rules" style="color: var(--primary);">Official Rules</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 16px;">
+                        <i class="fas fa-paper-plane"></i> Submit Entry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq-section" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+                <p>Have questions? We have answers!</p>
+            </div>
+            <div class="faq-content">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Who can enter this giveaway?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our giveaway is open to legal residents worldwide who are at least 18 years old. Some
+                            restrictions may apply based on local laws and regulations.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How is the winner selected?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Winners are selected using a certified random number generator from all valid entries. The
+                            process is completely fair, transparent, and auditable.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>When will the winner be announced?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The winner will be announced within 48 hours after the giveaway ends and will be contacted
+                            via the email provided during entry.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How will I receive my prize if I win?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Prizes are typically delivered via bank transfer, PayPal, or other secure methods. We'll work
+                            with you to arrange the best and most convenient option.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Is there any cost to enter?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, our giveaways are completely free to enter. We never ask for payment, credit card
+                            information, or any form of compensation.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can I increase my chances of winning?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Each person is limited to one entry to ensure fairness for everyone. Multiple entries from
+                            the same individual will result in disqualification.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Past Winners</h2>
+                <p>Don't just take our word for it. Hear from our happy winners!</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar" style="background: #667eea;">JS</div>
+                        <div>
+                            <div class="testimonial-name">John Smith 🇺🇸</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"I couldn't believe it when I won! The process was smooth and I received
+                        my prize within a week. This giveaway changed my life!"</p>
+                </div>
+
+                <div class="testimonial-card animate-fade-in" style="animation-delay: 0.1s">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar" style="background: #f093fb;">SA</div>
+                        <div>
+                            <div class="testimonial-name">Sarah Ahmed 🇬🇧</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"At first I thought it might be a scam, but everything was legitimate. I
+                        used my winnings to start my own business!"</p>
+                </div>
+
+                <div class="testimonial-card animate-fade-in" style="animation-delay: 0.2s">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar" style="background: #4facfe;">LM</div>
+                        <div>
+                            <div class="testimonial-name">Li Mei 🇨🇳</div>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"The entry process was so easy and the customer support was excellent.
+                        I'm so grateful for this opportunity!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <span>🎉</span>
+                        <span>WinBig20K</span>
+                    </div>
+                    <p>Your trusted source for amazing giveaways and life-changing prizes.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#rules">Rules</a></li>
+                        <li><a href="#entry">Enter Now</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Responsible Gaming</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@winbig20k.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Giveaway St, NY</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 WinBig20K. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">Congratulations!</h2>
+            <p class="modal-text">You've successfully entered our $20,000 giveaway! The winner will be announced after
+                the giveaway ends. Good luck!</p>
+            <button class="btn btn-primary" onclick="closeModal()" style="padding: 12px 30px;">
+                <i class="fas fa-check"></i> Got It!
+            </button>
+        </div>
+    </div>
+
+    <!-- Testimonial Popups (from testimonial_popups.html) -->
+    <div id="testimonialPopup" class="testimonial-popup">
+        <button class="close-btn" onclick="closeTestimonialPopup()">&times;</button>
+        <div class="testimonial-header">
+            <div class="testimonial-avatar" id="testimonialAvatar"></div>
+            <div class="testimonial-info">
+                <h3><span id="testimonialName"></span> <span id="testimonialCountry"></span></h3>
+            </div>
+        </div>
+        <div class="testimonial-text" id="testimonialText"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

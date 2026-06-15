@@ -1,21 +1,26 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    LayoutDashboard, Users, Trophy, PlusCircle,
-    LogOut, Menu, X, Zap
+    LayoutDashboard, Users, Trophy, Zap,
+    LogOut, Menu, X, PlusCircle
 } from 'lucide-react';
 import { useState } from 'react';
 
+
+
+
 const navItems = [
-    { label: 'Dashboard',   path: '/admin',         icon: LayoutDashboard },
-    { label: 'Applicants',  path: '/admin/applicants', icon: Users },
-    { label: 'Winners',     path: '/admin/winners',  icon: Trophy },
-    { label: 'New Giveaway',path: '/admin/create',   icon: PlusCircle },
+    { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+
+    { label: 'Applicants', path: '/admin/applicants', icon: Users },
+    { label: 'Winners', path: '/admin/winners', icon: Trophy },
+
+    { label: 'Create Giveaway', path: '/admin/create', icon: PlusCircle },
 ];
 
 export function AdminLayout() {
-    const navigate  = useNavigate();
-    const location  = useLocation();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const isActive = (path) => location.pathname === path;
@@ -48,11 +53,10 @@ export function AdminLayout() {
                                 onClick={() => navigate(item.path)}
                                 whileHover={{ x: 4 }}
                                 whileTap={{ scale: 0.97 }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                                    active
-                                        ? 'bg-gradient-to-r from-purple-600/30 to-pink-500/10 text-white border border-purple-500/30'
-                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                }`}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${active
+                                    ? 'bg-gradient-to-r from-purple-600/30 to-pink-500/10 text-white border border-purple-500/30'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                    }`}
                             >
                                 <Icon className={`w-5 h-5 ${active ? 'text-purple-400' : ''}`} />
                                 {item.label}
@@ -69,11 +73,26 @@ export function AdminLayout() {
 
                 {/* Logout */}
                 <div className="px-3 pb-6">
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all">
+                    <button
+                        onClick={async () => {
+                            try {
+                                const { signOut } = await import('firebase/auth');
+                                const { auth } = await import('../firebaseClient');
+                                await signOut(auth);
+                            } catch {
+                                // ignore
+                            } finally {
+                                localStorage.removeItem('isAdmin');
+                                navigate('/admin/login');
+                            }
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                    >
                         <LogOut className="w-5 h-5" />
                         Logout
                     </button>
                 </div>
+
             </aside>
 
             {/* ── Mobile sidebar ── */}
@@ -110,11 +129,10 @@ export function AdminLayout() {
                                         <button
                                             key={item.path}
                                             onClick={() => { navigate(item.path); setSidebarOpen(false); }}
-                                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                                                active
-                                                    ? 'bg-gradient-to-r from-purple-600/30 to-pink-500/10 text-white border border-purple-500/30'
-                                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                            }`}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${active
+                                                ? 'bg-gradient-to-r from-purple-600/30 to-pink-500/10 text-white border border-purple-500/30'
+                                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                }`}
                                         >
                                             <Icon className="w-5 h-5" />
                                             {item.label}

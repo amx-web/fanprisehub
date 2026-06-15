@@ -1,28 +1,53 @@
 import { create } from 'zustand';
-import { mockGiveaways, mockWinners } from '../data/mockData';
+
+import { addWinner as addWinnerService } from '../firebase/winners';
+import { addGiveaway as addGiveawayService, updateGiveaway as updateGiveawayService, deleteGiveaway as deleteGiveawayService } from '../firebase/giveaways';
+
+
 
 export const useGiveawayStore = create((set) => ({
-    giveaways: mockGiveaways,
+    // Firestore is the single source of truth.
+    // Initial state is empty; pages should show loading until subscriptions load.
+    giveaways: [],
     socialLinks: { tiktok: '', telegram: '' },
-    winners: mockWinners,
+    winners: [],
     entries: [],
 
+    // Hydration actions
+    setGiveaways: (giveaways) => set(() => ({ giveaways })),
+    setWinners: (winners) => set(() => ({ winners })),
+
     // Giveaway actions
-    addGiveaway: (giveaway) => set((state) => ({
-        giveaways: [...state.giveaways, { ...giveaway, id: Date.now() }]
-    })),
+    addGiveaway: async (giveaway) => {
+        const id = await addGiveawayService(giveaway);
+        set((state) => ({
+            giveaways: [...state.giveaways, { ...giveaway, id }],
+        }));
+        return id;
+    },
 
-    updateGiveaway: (id, updates) => set((state) => ({
-        giveaways: state.giveaways.map(g => g.id === id ? { ...g, ...updates } : g)
-    })),
 
-    deleteGiveaway: (id) => set((state) => ({
-        giveaways: state.giveaways.filter(g => g.id !== id)
-    })),
+    updateGiveaway: async (giveawayId, updates) => {
+        console.log('Updating giveaway in store:', giveawayId, updates);
+        await updateGiveawayService(giveawayId, updates);
+        set((state) => ({
+            giveaways: state.giveaways.map((g) => (g.id === giveawayId ? { ...g, ...updates } : g)),
+        }));
+        console.log('Giveaway updated successfully in store:', updates);
+    },
+
+    deleteGiveaway: async (id) => {
+        // Keep UI responsive only after Firestore deletion succeeds
+        await deleteGiveawayService(id);
+        set((state) => ({
+            giveaways: state.giveaways.filter((g) => String(g.id) !== String(id)),
+            entries: state.entries.filter((e) => String(e.giveawayId) !== String(id)),
+        }));
+    },
 
     getGiveawayById: (id) => {
         const state = useGiveawayStore.getState();
-        return state.giveaways.find(g => g.id === parseInt(id));
+        return state.giveaways.find((g) => String(g.id) === String(id));
     },
 
     // Social links (admin-configured)
@@ -31,14 +56,45 @@ export const useGiveawayStore = create((set) => ({
     })),
 
     // Entry actions
-    enterGiveaway: (giveawayId, entry) => set((state) => ({
-        entries: [...state.entries, { ...entry, giveawayId, id: Date.now() }]
-    })),
+    // NOTE: participant counting is handled in Firestore submitEntry (to prevent duplicates)
+    // Only update local state if Firestore write succeeds.
+    enterGiveaway: async (giveawayId, entry) => {
+        const { submitEntry } = await import('../firebase/entries');
+        // Firestore write (required to succeed before we touch local state)
+        await submitEntry({
+            giveawayId,
+            fullName: entry.fullName,
+            email: entry.email,
+            country: entry.country,
+            tasks: entry.tasks || {},
+            payoutMethod: entry.payoutMethod,
+            payoutDetails: entry.payoutDetails || {},
+            favoriteSong: entry.favoriteSong || '',
+            reasonForLiking: entry.reasonForLiking || '',
+        });
+
+        // If Firestore succeeded, add to local state for instant UI flow
+        set((state) => ({
+            entries: [...state.entries, { ...entry, giveawayId, id: Date.now() }]
+        }));
+    },
+
 
     // Winner actions
+    addWinner: async ({ giveawayId, name, prize, giveawayTitle, date }) => {
+        const id = await addWinnerService({ giveawayId, name, prize, giveawayTitle, date });
+        set((state) => ({
+            winners: [
+                ...state.winners,
+                { id, giveawayId, name, prize, giveawayTitle, date: date ?? new Date() },
+            ]
+        }));
+    },
+
+    // Legacy: random picker (kept but not used for persisted flow)
     pickWinner: (giveawayId) => set((state) => {
-        const giveaway = state.giveaways.find(g => g.id === giveawayId);
-        const giveawayEntries = state.entries.filter(e => e.giveawayId === giveawayId);
+        const giveaway = state.giveaways.find((g) => String(g.id) === String(giveawayId));
+        const giveawayEntries = state.entries.filter((e) => String(e.giveawayId) === String(giveawayId));
 
         if (giveawayEntries.length === 0) return state;
 
@@ -51,8 +107,7 @@ export const useGiveawayStore = create((set) => ({
             giveawayTitle: giveaway.title
         };
 
-        return {
-            winners: [...state.winners, newWinner]
-        };
+        return { winners: [...state.winners, newWinner] };
     })
 }));
+

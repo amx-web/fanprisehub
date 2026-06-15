@@ -1,9 +1,13 @@
 # TODO
 
-- [x] Add image `image/ChatGPT Image May 11, 2026, 04_54_17 AM.png` to the User Home “Active Giveaways” (giveaway section).
-- [x] Ensure the image is served correctly by Vite.
-- [ ] Update UI layout (image banner/section) and verify build.
-- [x] Admin approval email feature analysis: Firestore trigger already exists in `functions/index.js` as `onEntryApproved`.
-- [ ] Verify Firestore fields/logic match: `entries` doc uses `status` and `winnerEmailSent` (or adjust to your schema).
-- [ ] Ensure Cloud Function environment variables are set: `EMAIL_USER`, `EMAIL_PASS`, and optionally `EMAIL_FROM_NAME`.
+## Entry form rewrite (ClaimForm)
+- [x] Update src/pages/user/ClaimForm.jsx to new giveaway entry form fields + validation
+- [x] Remove Firebase/firestore usage from this page
+- [x] Implement country searchable dropdown (all countries) for Country field
+- [x] Implement social media checkbox group with at least one selected
+- [x] On submit: build WhatsApp message with exact template + open wa.me link in new tab
+- [x] Show success screen inside page after opening WhatsApp
+- [x] Apply specified dark theme + card/input/button styles
+- [ ] Add Framer Motion fade-in animation
+
 

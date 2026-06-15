@@ -40,7 +40,7 @@ export function UserFooter() {
                     <div>
                         <h4 className="font-semibold text-white mb-4">Legal</h4>
                         <ul className="space-y-2 text-sm text-gray-400">
-                            <li><a href="#" className="hover:text-purple-400 transition">Terms of Service</a></li>
+                            <li><a href="/terms" className="hover:text-purple-400 transition">Terms of Service</a></li>
                             <li><a href="#" className="hover:text-purple-400 transition">Privacy Policy</a></li>
                             <li><a href="#" className="hover:text-purple-400 transition">Contact</a></li>
                             <li><a href="#" className="hover:text-purple-400 transition">Support</a></li>

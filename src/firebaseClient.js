@@ -2,13 +2,18 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getStorage } from 'firebase/storage';
 import { firebaseConfig } from './firebaseConfig';
+
 
 // Singleton — only initialise once
 const app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig);
 
-export const db   = getFirestore(app);
+
+export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const storage = getStorage(app);
+
 
 // Analytics (optional — fails gracefully in non-browser envs)
 let analytics = undefined;
@@ -17,3 +22,4 @@ isSupported()
     .catch(() => console.warn('[Firebase] Analytics not initialised'));
 
 export { app, analytics };
+

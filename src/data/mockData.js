@@ -1,24 +1,32 @@
+const endDate = new Date();
+endDate.setDate(endDate.getDate() + 30); // 30 days from now
+
 export const mockGiveaways = [
     {
-        id: 1,
-        title: "FanPrizeHub $20,000 Cash Giveaway",
-        description: "Be part of the lucky winner and claim your reward today. This is your chance to change your life — seize it.",
+        id: 'default-20k-giveaway',
+        title: 'FanPrizeHub $20,000 Cash Giveaway',
+        description: 'Join our exclusive giveaway for a chance to win $20,000 in cash! This is your opportunity to be one of our lucky winners.',
         prizeAmount: 20000,
-        currency: "$",
-        image: "https://images.unsplash.com/photo-1579621970563-430f63602d4e?w=800&q=80",
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        participants: 8432,
-        winnersCount: 1,
-        status: "active",
+        currency: '$',
+        image: '/aVfQJ.jpg',
+        startDate: new Date(),
+        endDate: endDate,
+        countdownTime: null, // Optional custom countdown time
+        isActive: true, // Enable/disable the giveaway
+        participants: 0,
+        winnersCount: 2,
+        status: 'active',
         rules: [
-            "Must be 18+ years old",
-            "One entry per person",
-            "Valid email and phone required",
-            "No purchase necessary",
-            "Winner will be contacted via email"
-        ]
+            'Must be 18+ years old',
+            'One entry per person',
+            'Valid email required',
+            'Winners will be announced weekly'
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
     }
 ];
+
 
 export const mockWinners = [
     {

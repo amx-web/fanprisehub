@@ -9,9 +9,10 @@ export function UserNavbar() {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Giveaways', path: '/' },
+        { name: 'Giveaways', path: '/giveaways' },
         { name: 'Winners', path: '/winners' },
-        { name: 'Rules', path: '/rules' }
+        { name: 'Rules', path: '/rules' },
+        { name: 'Terms', path: '/terms' }
     ];
 
     return (
@@ -88,3 +89,4 @@ export function UserNavbar() {
         </motion.nav>
     );
 }
+

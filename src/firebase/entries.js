@@ -14,15 +14,20 @@ import {
     query,
     orderBy,
     serverTimestamp,
+    where,
+    getDoc,
+    runTransaction,
 } from 'firebase/firestore';
 import { db } from '../firebaseClient';
 
 const COLLECTION = 'entries';
 const entriesRef = () => collection(db, COLLECTION);
 
-// ─── Submit a new giveaway entry ────────────────────────────────────────────
+// ─── Submit a new giveaway entry + safely increment participants ─────
+// Prevent duplicates by: email + giveawayId
 export async function submitEntry(data) {
     const {
+        giveawayId,
         fullName,
         email,
         country = '',
@@ -33,7 +38,19 @@ export async function submitEntry(data) {
         tasks = {},
     } = data;
 
+    if (!giveawayId) throw new Error('submitEntry: giveawayId is required');
+    if (!email) throw new Error('submitEntry: email is required');
+
+    // Duplicate prevention
+    const q = query(entriesRef(), where('email', '==', email), where('giveawayId', '==', giveawayId));
+    const existing = await getDocs(q);
+    if (!existing.empty) {
+        return { id: existing.docs[0].id, created: false };
+    }
+
+    // Create entry
     const docRef = await addDoc(entriesRef(), {
+        giveawayId,
         fullName,
         email,
         country,
@@ -43,15 +60,24 @@ export async function submitEntry(data) {
         payoutDetails,
         tasks: {
             instagramFollowed: tasks.instagramFollowed || false,
-            facebookFollowed:  tasks.facebookFollowed  || false,
-            tiktokFollowed:    tasks.tiktokFollowed    || false,
+            facebookFollowed: tasks.facebookFollowed || false,
+            tiktokFollowed: tasks.tiktokFollowed || false,
             youtubeSubscribed: tasks.youtubeSubscribed || false,
         },
         status: 'pending',
         createdAt: serverTimestamp(),
     });
 
-    return docRef.id;
+    // Increment participants in the giveaway document (persistent + realtime)
+    const giveawayDocRef = doc(db, 'giveaways', giveawayId);
+    await runTransaction(db, async (tx) => {
+        const giveawaySnap = await tx.get(giveawayDocRef);
+        if (!giveawaySnap.exists()) return;
+        const current = giveawaySnap.data()?.participants ?? 0;
+        tx.update(giveawayDocRef, { participants: current + 1, updatedAt: serverTimestamp() });
+    });
+
+    return { id: docRef.id, created: true };
 }
 
 // ─── Fetch all entries (one-time) ────────────────────────────────────────────
@@ -77,3 +103,11 @@ export async function updateEntryStatus(entryId, status) {
     }
     await updateDoc(doc(db, COLLECTION, entryId), { status });
 }
+
+// Backward-compatible alias
+export const checkEmailExistsForGiveaway = async ({ giveawayId, email }) => {
+    if (!giveawayId || !email) return false;
+    const q = query(entriesRef(), where('email', '==', email), where('giveawayId', '==', giveawayId));
+    const snap = await getDocs(q);
+    return !snap.empty;
+};

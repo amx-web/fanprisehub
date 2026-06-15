@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info, Star, Mail } from 'lucide-react';
+import { useState } from 'react';
 
 export function RulesPageContent() {
     const rules = [
@@ -81,9 +82,9 @@ export function RulesPageContent() {
                                 className="group bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-xl p-6 hover:border-purple-500/60 transition-all"
                             >
                                 <motion.div
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                    className="mb-4"
+                                    whileHover={{ scale: 1.15, rotate: 10 }}
+                                    transition={{ type: "spring", stiffness: 200 }}
+                                    className="mb-4 inline-flex"
                                 >
                                     <Icon className="w-8 h-8 text-purple-400 group-hover:text-pink-400 transition" />
                                 </motion.div>
@@ -160,23 +161,179 @@ export function RulesPageContent() {
                     </div>
                 </motion.section>
 
-                {/* Contact Section */}
+                {/* Testimonies Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    className="text-center bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-12 backdrop-blur"
+                    className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-12 backdrop-blur"
                 >
-                    <h2 className="text-2xl font-bold text-white mb-4">Still have questions?</h2>
-                    <p className="text-gray-300 mb-6">Our support team is here to help 24/7</p>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold rounded-lg shadow-lg hover:shadow-purple-500/50 transition-all"
-                    >
-                        Contact Support
-                    </motion.button>
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl font-bold text-white mb-4">Share Your Testimony</h2>
+                        <p className="text-gray-300 mb-2">Tell us about your experience with FanPrizeHub</p>
+                        <p className="text-gray-400 text-sm">Your story helps others trust our platform</p>
+                    </div>
+
+                    <div className="max-w-2xl mx-auto space-y-6">
+                        {/* Email Contact */}
+                        <motion.a
+                            href="mailto:fanprizehub@gmail.com?subject=FanPrizeHub%20Testimony"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center gap-4 p-6 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-xl hover:border-purple-500/60 transition-all"
+                        >
+                            <Mail className="w-8 h-8 text-purple-400" />
+                            <div className="text-left flex-1">
+                                <p className="text-white font-semibold">Send us your testimony via email</p>
+                                <p className="text-gray-400 text-sm">fanprizehub@gmail.com</p>
+                            </div>
+                            <span className="text-purple-400">→</span>
+                        </motion.a>
+
+                        {/* Inline Form */}
+                        <div>
+                            <p className="text-white font-semibold mb-4">Or share your story here:</p>
+                            <TestimonyForm />
+                        </div>
+                    </div>
                 </motion.div>
             </div>
         </div>
+    );
+}
+
+function TestimonyForm() {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        rating: '5',
+        testimony: ''
+    });
+    const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            // Send email to fanprizehub@gmail.com
+            const subject = encodeURIComponent('New Testimony Submission');
+            const body = encodeURIComponent(
+                `Name: ${formData.name}\nEmail: ${formData.email}\nRating: ${formData.rating}/5\n\nTestimony:\n${formData.testimony}`
+            );
+
+            // Create mailto link and open it
+            window.location.href = `mailto:fanprizehub@gmail.com?subject=${subject}&body=${body}`;
+
+            // Show success message
+            setSubmitted(true);
+            setFormData({ name: '', email: '', rating: '5', testimony: '' });
+
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                setSubmitted(false);
+            }, 3000);
+        } catch (error) {
+            console.error('Error submitting testimony:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4 bg-slate-800/50 border border-purple-500/20 rounded-xl p-6"
+        >
+            {submitted && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-green-500/20 border border-green-500/50 text-green-300 px-4 py-3 rounded-lg flex items-center gap-2"
+                >
+                    <CheckCircle className="w-5 h-5" />
+                    Thank you! Your testimony will be sent via email.
+                </motion.div>
+            )}
+
+            <div>
+                <label className="block text-white font-semibold mb-2">Your Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your name"
+                    required
+                    className="w-full px-4 py-2 bg-slate-700/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/60 transition"
+                />
+            </div>
+
+            <div>
+                <label className="block text-white font-semibold mb-2">Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    required
+                    className="w-full px-4 py-2 bg-slate-700/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/60 transition"
+                />
+            </div>
+
+            <div>
+                <label className="block text-white font-semibold mb-2 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    Rating
+                </label>
+                <select
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 bg-slate-700/50 border border-purple-500/30 rounded-lg text-white focus:outline-none focus:border-purple-500/60 transition"
+                >
+                    <option value="5">⭐⭐⭐⭐⭐ 5 Stars - Excellent!</option>
+                    <option value="4">⭐⭐⭐⭐ 4 Stars - Very Good</option>
+                    <option value="3">⭐⭐⭐ 3 Stars - Good</option>
+                    <option value="2">⭐⭐ 2 Stars - Fair</option>
+                    <option value="1">⭐ 1 Star - Poor</option>
+                </select>
+            </div>
+
+            <div>
+                <label className="block text-white font-semibold mb-2">Your Testimony</label>
+                <textarea
+                    name="testimony"
+                    value={formData.testimony}
+                    onChange={handleChange}
+                    placeholder="Share your experience with FanPrizeHub... (minimum 20 characters)"
+                    required
+                    minLength="20"
+                    rows="5"
+                    className="w-full px-4 py-2 bg-slate-700/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/60 transition resize-none"
+                />
+            </div>
+
+            <motion.button
+                type="submit"
+                disabled={loading}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 disabled:from-gray-600 disabled:to-gray-500 text-white font-bold rounded-lg shadow-lg hover:shadow-purple-500/50 transition-all"
+            >
+                {loading ? 'Submitting...' : 'Submit Testimony'}
+            </motion.button>
+        </motion.form>
     );
 }

@@ -1,22 +1,48 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { ArrowRight, Zap, Flame } from 'lucide-react';
+
+import { subscribeToGiveaways } from '../../firebase/giveaways';
+import { useGiveawayStore } from '../../store/giveawayStore';
+
 import { GiveawayCard } from '../../components/shared/GiveawayCard';
 import { TrustBadges } from '../../components/shared/TrustBadges';
-import { useGiveawayStore } from '../../store/giveawayStore';
 import { GiveawayGiveawayImageBanner } from '../../components/user/GiveawayGiveawayImageBanner';
+import { TestimonialPopup } from '../../components/shared/TestimonialPopup';
+import { FAQSection } from '../../components/shared/FAQSection';
 
 
 export function Homepage() {
-    const { giveaways } = useGiveawayStore();
-    const [isHeroVisible, setIsHeroVisible] = useState(true);
+    const { giveaways, setGiveaways } = useGiveawayStore();
+    const [loading, setLoading] = useState(true);
+    const activeGiveawaysRef = useRef(null);
+
+    useEffect(() => {
+        let unsub = null;
+        setLoading(true);
+        try {
+            unsub = subscribeToGiveaways((data) => {
+                setGiveaways(data);
+                setLoading(false);
+            });
+        } catch (e) {
+            console.error('subscribeToGiveaways failed:', e);
+            setLoading(false);
+        }
+        return () => { if (typeof unsub === 'function') unsub(); };
+    }, [setGiveaways]);
+
+    const activeGiveaways = useMemo(() => {
+        return (giveaways || []).filter((g) => g && (g.isActive || g.status === 'active'));
+    }, [giveaways]);
+
+    const scrollToActiveGiveaways = () => {
+        activeGiveawaysRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-        }
+        visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
     };
 
     const itemVariants = {
@@ -26,10 +52,11 @@ export function Homepage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-black via-slate-950 to-black">
+
             {/* Hero Section */}
             <motion.section
                 initial={{ opacity: 0 }}
-                animate={{ opacity: isHeroVisible ? 1 : 0 }}
+                animate={{ opacity: 1 }}
                 className="relative min-h-[90vh] flex items-center justify-center px-4 pt-20 overflow-hidden"
             >
                 {/* Background Effects */}
@@ -66,7 +93,7 @@ export function Homepage() {
 
                     <motion.h1
                         variants={itemVariants}
-                        className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 text-white"
+                        className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 text-white"
                     >
                         Exclusive <span className="bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent">Rewards</span>
                         <br />for <span className="bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent">Real Fans</span>
@@ -74,9 +101,9 @@ export function Homepage() {
 
                     <motion.p
                         variants={itemVariants}
-                        className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl"
+                        className="text-lg md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
                     >
-                        Fans worldwide are joining for a chance to win up to $20,000, with more than $2 million in exclusive rewards being distributed.
+                        Fans worldwide are participating for a chance to receive rewards valued at up to $20,000 USD, with more than $2 million USD in exclusive fan rewards currently being distributed.
                     </motion.p>
 
                     {/* Stats */}
@@ -92,9 +119,9 @@ export function Homepage() {
                             <motion.div
                                 key={idx}
                                 whileHover={{ scale: 1.05 }}
-                                className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-lg p-4 backdrop-blur"
+                                className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-lg p-3 sm:p-4 backdrop-blur"
                             >
-                                <p className="text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                <p className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                                     {stat.label}
                                 </p>
                                 <p className="text-xs text-gray-400 mt-1">{stat.value}</p>
@@ -110,7 +137,8 @@ export function Homepage() {
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-white text-black font-bold rounded-full text-lg flex items-center gap-2 shadow-xl hover:bg-gray-100 transition-all"
+                            onClick={scrollToActiveGiveaways}
+                            className="w-full sm:w-auto px-8 py-4 bg-white text-black font-bold rounded-full text-lg flex items-center justify-center gap-2 shadow-xl hover:bg-gray-100 transition-all"
                         >
                             Start Winning
                             <ArrowRight className="w-5 h-5" />
@@ -119,7 +147,8 @@ export function Homepage() {
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 bg-red-500/10 border border-red-500/30 text-white font-bold rounded-full text-lg backdrop-blur-sm hover:bg-red-500/20 transition-all"
+                            onClick={scrollToActiveGiveaways}
+                            className="w-full sm:w-auto px-8 py-4 bg-red-500/10 border border-red-500/30 text-white font-bold rounded-full text-lg backdrop-blur-sm hover:bg-red-500/20 transition-all"
                         >
                             Browse Giveaways
                         </motion.button>
@@ -129,6 +158,7 @@ export function Homepage() {
 
             {/* Active Giveaways Section */}
             <motion.section
+                ref={activeGiveawaysRef}
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
@@ -139,20 +169,29 @@ export function Homepage() {
                         <Flame className="w-6 h-6 text-orange-400" />
                         <h2 className="text-sm font-bold text-orange-400 uppercase tracking-wider">HOT OFFERS</h2>
                     </div>
-                    <h3 className="text-5xl font-black text-white mb-4">Active Giveaways</h3>
+                    <h3 className="text-4xl sm:text-5xl font-black text-white mb-4">Active Giveaways</h3>
                     <p className="text-xl text-gray-400">Huge prizes waiting. Limited time only.</p>
                 </div>
 
-                {/* Image banner for giveaways */}
                 <GiveawayGiveawayImageBanner />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                    {giveaways.map((giveaway) => (
-                        <GiveawayCard key={giveaway.id} giveaway={giveaway} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="flex items-center justify-center py-20 text-gray-400">
+                        <span>Loading giveaways...</span>
+                    </div>
+                ) : activeGiveaways.length === 0 ? (
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
+                        <p className="text-white font-bold">No active giveaways right now</p>
+                        <p className="text-gray-300 mt-2 text-sm">Check back soon — new cash giveaways go live regularly.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                        {activeGiveaways.map((giveaway) => (
+                            <GiveawayCard key={giveaway.id} giveaway={giveaway} />
+                        ))}
+                    </div>
+                )}
             </motion.section>
-
 
             {/* Trust Section */}
             <motion.section
@@ -162,16 +201,13 @@ export function Homepage() {
                 className="relative z-10 max-w-7xl mx-auto px-4 py-24"
             >
                 <div className="text-center mb-16">
-                    <h2 className="text-5xl font-black text-white mb-4">Why Trust FanPrizeHub?</h2>
+                    <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">Why Trust FanPrizeHub?</h2>
                     <p className="text-xl text-gray-400">Transparent, certified, and audited</p>
                 </div>
 
                 <TrustBadges />
 
-                {/* Additional Trust Info */}
-                <motion.div
-                    className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6"
-                >
+                <motion.div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <motion.div
                         whileHover={{ y: -10 }}
                         className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 backdrop-blur-md"
@@ -191,6 +227,13 @@ export function Homepage() {
                     </motion.div>
                 </motion.div>
             </motion.section>
+
+            {/* Testimonial Popup */}
+            <TestimonialPopup />
+
+            <FAQSection />
+
+
         </div>
     );
 }

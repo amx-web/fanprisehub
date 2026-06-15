@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PrizeCard } from '../../components/shared/PrizeCard';
 import { CountdownTimer } from '../../components/shared/CountdownTimer';
 import { EntryModal } from '../../components/user/EntryModal';
+import { LoadingSpinner } from '../../components/shared/LoadingSpinner';
 import { useGiveawayStore } from '../../store/giveawayStore';
 import { Users, Trophy, CheckCircle } from 'lucide-react';
 
@@ -16,17 +17,35 @@ const redGlowStyle = {
 
 export function GiveawayDetailsPage() {
     const { id } = useParams();
-    const { getGiveawayById } = useGiveawayStore();
-    const giveaway = getGiveawayById(id);
+    const { getGiveawayById, giveaways } = useGiveawayStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    if (!giveaway) {
+    const giveaway = getGiveawayById(id);
+    const isLoading = giveaways.length === 0;
+
+    // Show loading spinner while data is being fetched
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
+
+    if (!giveaway || !giveaway.isActive) {
         return (
             <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <p className="text-white text-2xl">Giveaway not found</p>
+                <div className="text-center">
+                    <p className="text-white text-2xl font-bold mb-4">Giveaway not found</p>
+                    <p className="text-gray-400">This giveaway is no longer available or has ended.</p>
+                </div>
             </div>
         );
     }
+
+    // Provide default rules if not available
+    const rules = giveaway.rules || [
+        'Must be 18+ years old',
+        'One entry per person',
+        'Valid email required',
+        'Winners will be announced'
+    ];
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-black via-slate-950 to-black">
@@ -83,7 +102,7 @@ export function GiveawayDetailsPage() {
                                     transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                                     className="text-7xl md:text-8xl block"
                                 >
-                                    $20,000
+                                    {giveaway.currency}{giveaway.prizeAmount.toLocaleString()}
                                 </motion.span>
                             </div>
 
@@ -112,7 +131,7 @@ export function GiveawayDetailsPage() {
                                 className="bg-white/[0.03] border border-white/10 rounded-2xl p-4 backdrop-blur-md transition-all duration-300 hover:border-red-500/20"
                             >
                                 <div className="flex items-center gap-2 mb-2">
-                                     <Users className="w-5 h-5 text-red-400" />
+                                    <Users className="w-5 h-5 text-red-400" />
                                     <span className="text-sm text-gray-400">Participants</span>
                                 </div>
                                 <p className="text-2xl font-bold text-white">{giveaway.participants.toLocaleString()}</p>
@@ -157,7 +176,7 @@ export function GiveawayDetailsPage() {
                     <h2 className="text-4xl font-black text-white mb-8">Rules & Requirements</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {giveaway.rules.map((rule, idx) => (
+                        {rules.map((rule, idx) => (
                             <motion.div
                                 key={idx}
                                 initial={{ opacity: 0, x: -20 }}
@@ -209,3 +228,4 @@ export function GiveawayDetailsPage() {
         </div>
     );
 }
+

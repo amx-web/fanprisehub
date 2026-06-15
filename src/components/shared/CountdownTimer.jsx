@@ -2,28 +2,65 @@ import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export function CountdownTimer({ endDate }) {
+export function CountdownTimer({ endDate, countdownTime }) {
     const [timeLeft, setTimeLeft] = useState({
         days: 0,
         hours: 0,
         minutes: 0,
         seconds: 0,
-        isExpired: false
+        isExpired: false,
     });
+
+    const [invalidFormat, setInvalidFormat] = useState(false);
+
+    const toValidDate = (value) => {
+        if (!value) return null;
+
+        // Firestore Timestamp
+        if (value?.toDate && typeof value.toDate === 'function') {
+            const d = value.toDate();
+            return isNaN(d?.getTime?.()) ? null : d;
+        }
+
+        // ISO string or something parseable
+        if (typeof value === 'string' || typeof value === 'number') {
+            const d = new Date(value);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        // Date object
+        if (value instanceof Date) {
+            return isNaN(value.getTime()) ? null : value;
+        }
+
+        return null;
+    };
 
     useEffect(() => {
         const calculateTimeLeft = () => {
-            const difference = new Date(endDate) - new Date();
+            const rawTarget = countdownTime ? countdownTime : endDate;
+            const targetDate = toValidDate(rawTarget);
+
+            if (!targetDate) {
+                setInvalidFormat(true);
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
+                return;
+            }
+
+            const now = new Date();
+            const difference = targetDate.getTime() - now.getTime();
 
             if (difference > 0) {
+                setInvalidFormat(false);
                 setTimeLeft({
                     days: Math.floor(difference / (1000 * 60 * 60 * 24)),
                     hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
                     minutes: Math.floor((difference / 1000 / 60) % 60),
                     seconds: Math.floor((difference / 1000) % 60),
-                    isExpired: false
+                    isExpired: false,
                 });
             } else {
+                setInvalidFormat(false);
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
             }
         };
@@ -31,7 +68,15 @@ export function CountdownTimer({ endDate }) {
         calculateTimeLeft();
         const timer = setInterval(calculateTimeLeft, 1000);
         return () => clearInterval(timer);
-    }, [endDate]);
+    }, [endDate, countdownTime]);
+
+    if (invalidFormat) {
+        return (
+            <div className="text-center">
+                <p className="text-gray-400 font-bold text-sm">Time unavailable</p>
+            </div>
+        );
+    }
 
     if (timeLeft.isExpired) {
         return (
@@ -40,6 +85,7 @@ export function CountdownTimer({ endDate }) {
             </div>
         );
     }
+
 
     return (
         <div className="flex items-center gap-2 justify-center">

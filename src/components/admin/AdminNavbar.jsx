@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, LayoutDashboard, Mail } from 'lucide-react';
+import { LogOut, Menu, X, LayoutDashboard, Mail, Gift } from 'lucide-react';
 import { useState } from 'react';
 
 export function AdminNavbar() {
@@ -9,6 +9,7 @@ export function AdminNavbar() {
 
     const navLinks = [
         { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+        { name: 'Edit Giveaway', path: '/admin/create', icon: Gift },
         { name: 'Email Templates', path: '/admin/email-template', icon: Mail },
     ];
 

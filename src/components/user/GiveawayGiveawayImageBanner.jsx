@@ -1,10 +1,16 @@
 import { motion } from 'framer-motion';
 
 import giveawayBannerImg from '../../../image/ChatGPT Image May 11, 2026, 04_54_17 AM.png';
-
-
+import { useGiveawayStore } from '../../store/giveawayStore';
 
 export function GiveawayGiveawayImageBanner() {
+    const { giveaways } = useGiveawayStore();
+    const activeGiveaways = giveaways.filter(g => g.isActive);
+
+    if (activeGiveaways.length === 0) {
+        return null;
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}

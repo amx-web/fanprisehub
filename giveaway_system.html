@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giveaway System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+        }
+
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button.secondary {
+            background: #f44336;
+        }
+
+        button.secondary:hover {
+            background: #d32f2f;
+        }
+
+        .giveaway-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4CAF50;
+        }
+
+        .giveaway-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .giveaway-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .giveaway-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .giveaway-status.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .giveaway-status.ended {
+            background: #f44336;
+            color: white;
+        }
+
+        .giveaway-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .giveaway-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .giveaway-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .participate-btn {
+            background: #2196F3;
+        }
+
+        .participate-btn:hover {
+            background: #0b7dda;
+        }
+
+        .no-giveaways {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 30px;">Giveaway System</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('admin')">Admin Panel</button>
+            <button class="tab" onclick="switchTab('user')">User View</button>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin" class="tab-content active">
+            <h2>Create New Giveaway</h2>
+            <form id="giveawayForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prize">Prize</label>
+                    <input type="text" id="prize" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="datetime-local" id="startDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="datetime-local" id="endDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxParticipants">Max Participants</label>
+                    <input type="number" id="maxParticipants" min="1" value="100" required>
+                </div>
+
+                <button type="submit">Create Giveaway</button>
+            </form>
+
+            <h2 style="margin-top: 40px;">Manage Giveaways</h2>
+            <div id="adminGiveaways"></div>
+        </div>
+
+        <!-- User View -->
+        <div id="user" class="tab-content">
+            <h2>Active Giveaways</h2>
+            <div id="userGiveaways"></div>
+
+            <!-- Featured $20,000 Giveaway -->
+            <div class="giveaway-card featured-giveaway"
+                style="border-left: 4px solid #FFD700; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin-top: 30px;">
+                <div class="giveaway-header">
+                    <div class="giveaway-title">💰 $20,000 Cash Giveaway!</div>
+                    <div class="giveaway-status active">HOT</div>
+                </div>
+
+                <div class="giveaway-meta">
+                    <span>🎁 Prize: $20,000 Cash</span>
+                    <span>⏳ Ends in 30 days</span>
+                </div>
+
+                <div class="giveaway-description">
+                    Enter now for your chance to win our biggest giveaway ever! $20,000 cash prize to one lucky winner.
+                    No purchase necessary!
+                </div>
+
+                <div class="giveaway-meta">
+                    <span>👥 Limited spots available!</span>
+                </div>
+
+                <div class="giveaway-actions">
+                    <button class="participate-btn" onclick="enterBigGiveaway()">Enter $20K Giveaway Now!</button>
+                </div>
+            </div>
+
+            <!-- Rules Section -->
+            <div style="margin-top: 50px;">
+                <h2>Official Rules</h2>
+                <div
+                    style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">📋 Eligibility</h3>
+                        <p>Open to legal residents worldwide, 18+. One entry per person. No purchase necessary.</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">🎟️ How to Enter</h3>
+                        <p>Complete the entry form with accurate information. Multiple entries will be disqualified.</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">🏆 Winner Selection</h3>
+                        <p>Random draw from all valid entries. Winner notified via email within 48 hours after giveaway
+                            ends.</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">💰 Prize</h3>
+                        <p>$20,000 USD via bank transfer or PayPal. Prize is non-transferable. Taxes are winner's
+                            responsibility.</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">📅 Giveaway Period</h3>
+                        <p>Starts immediately, ends in 30 days. All entries must be received during this period.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Switch between admin and user views
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            // Refresh the view
+            if (tabName === 'admin') {
+                displayAdminGiveaways();
+            } else {
+                displayUserGiveaways();
+            }
+        }
+
+        // Initialize localStorage with giveaways if it doesn't exist
+        if (!localStorage.getItem('giveaways')) {
+            localStorage.setItem('giveaways', JSON.stringify([]));
+        }
+
+        // Form submission for creating giveaways
+        document.getElementById('giveawayForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const giveaway = {
+                id: Date.now().toString(),
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                prize: document.getElementById('prize').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                maxParticipants: document.getElementById('maxParticipants').value,
+                participants: [],
+                createdAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            giveaways.push(giveaway);
+            localStorage.setItem('giveaways', JSON.stringify(giveaways));
+
+            // Reset form
+            this.reset();
+
+            // Show success message
+            alert('Giveaway created successfully!');
+
+            // Refresh the admin view
+            displayAdminGiveaways();
+        });
+
+        // Display giveaways in admin panel
+        function displayAdminGiveaways() {
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const container = document.getElementById('adminGiveaways');
+
+            if (giveaways.length === 0) {
+                container.innerHTML = '<div class="no-giveaways">No giveaways created yet.</div>';
+                return;
+            }
+
+            let html = '';
+            giveaways.forEach(giveaway => {
+                const isActive = new Date(giveaway.endDate) > new Date();
+
+                html += `
+                    <div class="giveaway-card">
+                        <div class="giveaway-header">
+                            <div class="giveaway-title">${giveaway.title}</div>
+                            <div class="giveaway-status ${isActive ? 'active' : 'ended'}">
+                                ${isActive ? 'Active' : 'Ended'}
+                            </div>
+                        </div>
+                        
+                        <div class="giveaway-meta">
+                            <span>🎁 Prize: ${giveaway.prize}</span>
+                            <span>📅 Ends: ${new Date(giveaway.endDate).toLocaleString()}</span>
+                        </div>
+                        
+                        <div class="giveaway-description">
+                            ${giveaway.description}
+                        </div>
+                        
+                        <div class="giveaway-meta">
+                            <span>👥 Participants: ${giveaway.participants.length}/${giveaway.maxParticipants}</span>
+                            <span>📅 Created: ${new Date(giveaway.createdAt).toLocaleString()}</span>
+                        </div>
+                        
+                        <div class="giveaway-actions">
+                            <button onclick="deleteGiveaway('${giveaway.id}')" class="secondary">Delete</button>
+                            <button onclick="viewParticipants('${giveaway.id}')">View Participants (${giveaway.participants.length})</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Display giveaways in user view
+        function displayUserGiveaways() {
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const container = document.getElementById('userGiveaways');
+
+            // Filter active giveaways
+            const activeGiveaways = giveaways.filter(giveaway =>
+                new Date(giveaway.startDate) <= new Date() &&
+                new Date(giveaway.endDate) > new Date()
+            );
+
+            if (activeGiveaways.length === 0) {
+                container.innerHTML = '<div class="no-giveaways">No active giveaways at the moment. Check back later!</div>';
+                return;
+            }
+
+            let html = '';
+            activeGiveaways.forEach(giveaway => {
+                const timeLeft = calculateTimeLeft(giveaway.endDate);
+                const canParticipate = giveaway.participants.length < giveaway.maxParticipants;
+
+                html += `
+                    <div class="giveaway-card">
+                        <div class="giveaway-header">
+                            <div class="giveaway-title">${giveaway.title}</div>
+                            <div class="giveaway-status active">Active</div>
+                        </div>
+                        
+                        <div class="giveaway-meta">
+                            <span>🎁 Prize: ${giveaway.prize}</span>
+                            <span>⏳ ${timeLeft}</span>
+                        </div>
+                        
+                        <div class="giveaway-description">
+                            ${giveaway.description}
+                        </div>
+                        
+                        <div class="giveaway-meta">
+                            <span>👥 ${giveaway.participants.length} of ${giveaway.maxParticipants} spots taken</span>
+                        </div>
+                        
+                        <div class="giveaway-actions">
+                            ${canParticipate ?
+                        `<button class="participate-btn" onclick="participateInGiveaway('${giveaway.id}')">Participate Now</button>`
+                        :
+                        `<button disabled>Giveaway Full</button>`}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Calculate time left for giveaway
+        function calculateTimeLeft(endDate) {
+            const now = new Date();
+            const end = new Date(endDate);
+            const diff = end - now;
+
+            if (diff <= 0) return "Ended";
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) return `${days}d ${hours}h left`;
+            if (hours > 0) return `${hours}h ${minutes}m left`;
+            return `${minutes}m left`;
+        }
+
+        // Participate in giveaway
+        function participateInGiveaway(giveawayId) {
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const giveawayIndex = giveaways.findIndex(g => g.id === giveawayId);
+
+            if (giveawayIndex === -1) return;
+
+            const giveaway = giveaways[giveawayIndex];
+
+            // Check if giveaway is still active
+            if (new Date(giveaway.endDate) <= new Date()) {
+                alert('This giveaway has ended.');
+                return;
+            }
+
+            // Check if giveaway is full
+            if (giveaway.participants.length >= giveaway.maxParticipants) {
+                alert('This giveaway is full.');
+                return;
+            }
+
+            // Show participation modal
+            showParticipationModal(giveawayId, giveaway.title);
+        }
+
+        // Show participation modal
+        function showParticipationModal(giveawayId, giveawayTitle) {
+            // Create modal overlay
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.style.background = 'white';
+            modalContent.style.padding = '30px';
+            modalContent.style.borderRadius = '8px';
+            modalContent.style.width = '90%';
+            modalContent.style.maxWidth = '500px';
+            modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
+
+            modalContent.innerHTML = `
+                <h2 style="margin-bottom: 20px; color: #333;">Enter Giveaway: ${giveawayTitle}</h2>
+                <form id="participationForm" onsubmit="submitParticipation(event, '${giveawayId}')">
+                    <div class="form-group">
+                        <label for="participantName">Full Name *</label>
+                        <input type="text" id="participantName" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="participantEmail">Email *</label>
+                        <input type="email" id="participantEmail" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="participantCountry">Country *</label>
+                        <select id="participantCountry" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">Select your country</option>
+                            <option value="🇺🇸 United States">🇺🇸 United States</option>
+                            <option value="🇬🇧 United Kingdom">🇬🇧 United Kingdom</option>
+                            <option value="🇨🇦 Canada">🇨🇦 Canada</option>
+                            <option value="🇦🇺 Australia">🇦🇺 Australia</option>
+                            <option value="🇮🇳 India">🇮🇳 India</option>
+                            <option value="🇨🇳 China">🇨🇳 China</option>
+                            <option value="🇯🇵 Japan">🇯🇵 Japan</option>
+                            <option value="🇩🇪 Germany">🇩🇪 Germany</option>
+                            <option value="🇫🇷 France">🇫🇷 France</option>
+                            <option value="🇧🇷 Brazil">🇧🇷 Brazil</option>
+                            <option value="🇲🇽 Mexico">🇲🇽 Mexico</option>
+                            <option value="🇳🇬 Nigeria">🇳🇬 Nigeria</option>
+                            <option value="🇿🇦 South Africa">🇿🇦 South Africa</option>
+                            <option value="🇷🇺 Russia">🇷🇺 Russia</option>
+                            <option value="🇮🇩 Indonesia">🇮🇩 Indonesia</option>
+                            <option value="🇵🇰 Pakistan">🇵🇰 Pakistan</option>
+                            <option value="🇧🇩 Bangladesh">🇧🇩 Bangladesh</option>
+                            <option value="🇵🇭 Philippines">🇵🇭 Philippines</option>
+                            <option value="🇪🇬 Egypt">🇪🇬 Egypt</option>
+                            <option value="🇸🇦 Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                            <option value="🇦🇪 UAE">🇦🇪 UAE</option>
+                            <option value="🇹🇷 Turkey">🇹🇷 Turkey</option>
+                            <option value="🇳🇱 Netherlands">🇳🇱 Netherlands</option>
+                            <option value="🇮🇹 Italy">🇮🇹 Italy</option>
+                            <option value="🇪🇸 Spain">🇪🇸 Spain</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="participantReferral">How did you hear about this giveaway?</label>
+                        <select id="participantReferral" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="No referral">Select an option</option>
+                            <option value="Friend or Family">Friend or Family</option>
+                            <option value="Social Media (Facebook, Instagram, etc.)">Social Media</option>
+                            <option value="Email Newsletter">Email Newsletter</option>
+                            <option value="Website Banner">Website Banner</option>
+                            <option value="Search Engine (Google, Bing, etc.)">Search Engine</option>
+                            <option value="Influencer or Blog">Influencer/Blog</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button type="submit" style="flex: 1; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Enter Giveaway</button>
+                        <button type="button" onclick="closeModal(this)" style="flex: 1; padding: 12px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    </div>
+                </form>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+
+        // Close modal
+        function closeModal(button) {
+            button.closest('div[style*="position: fixed"]').remove();
+        }
+
+        // Submit participation
+        function submitParticipation(event, giveawayId) {
+            event.preventDefault();
+
+            const name = document.getElementById('participantName').value;
+            const email = document.getElementById('participantEmail').value;
+            const country = document.getElementById('participantCountry').value;
+            const referral = document.getElementById('participantReferral').value;
+
+            // Simple email validation
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            if (!country) {
+                alert('Please select your country.');
+                return;
+            }
+
+            // Add participant to giveaway
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const giveawayIndex = giveaways.findIndex(g => g.id === giveawayId);
+            const giveaway = giveaways[giveawayIndex];
+
+            giveaway.participants.push({
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                country: country,
+                referral: referral,
+                entryDate: new Date().toISOString()
+            });
+
+            // Save updated giveaway
+            giveaways[giveawayIndex] = giveaway;
+            localStorage.setItem('giveaways', JSON.stringify(giveaways));
+
+            // Close modal
+            event.target.closest('div[style*="position: fixed"]').remove();
+
+            // Show success message
+            alert('🎉 Successfully entered the giveaway! Good luck!');
+
+            // Refresh views
+            displayAdminGiveaways();
+            displayUserGiveaways();
+        }
+
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Delete giveaway
+        function deleteGiveaway(giveawayId) {
+            if (!confirm('Are you sure you want to delete this giveaway?')) return;
+
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const updatedGiveaways = giveaways.filter(g => g.id !== giveawayId);
+
+            localStorage.setItem('giveaways', JSON.stringify(updatedGiveaways));
+            displayAdminGiveaways();
+        }
+
+        // View participants
+        function viewParticipants(giveawayId) {
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const giveaway = giveaways.find(g => g.id === giveawayId);
+
+            if (!giveaway) return;
+
+            // Create a better display for participants
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            modal.style.overflowY = 'auto';
+            modal.style.padding = '20px';
+
+            const modalContent = document.createElement('div');
+            modalContent.style.background = 'white';
+            modalContent.style.padding = '30px';
+            modalContent.style.borderRadius = '8px';
+            modalContent.style.width = '90%';
+            modalContent.style.maxWidth = '800px';
+            modalContent.style.maxHeight = '80vh';
+            modalContent.style.overflowY = 'auto';
+            modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+
+            let html = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: #333;">Giveaway Participants (${giveaway.participants.length})</h2>
+                    <button onclick="closeModal(this)" style="padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+                </div>
+                
+                <div style="margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 4px;">
+                    <strong>Giveaway:</strong> ${giveaway.title}<br>
+                    <strong>Prize:</strong> ${giveaway.prize}<br>
+                    <strong>Ends:</strong> ${new Date(giveaway.endDate).toLocaleString()}
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #4CAF50; color: white;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">#</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Name</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Email</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Country</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Referral Source</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Entry Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            giveaway.participants.forEach((participant, index) => {
+                html += `
+                            <tr style="background: ${index % 2 === 0 ? '#f9f9f9' : 'white'};">
+                                <td style="padding: 12px; border: 1px solid #ddd;">${index + 1}</td>
+                                <td style="padding: 12px; border: 1px solid #ddd;">${participant.name}</td>
+                                <td style="padding: 12px; border: 1px solid #ddd;">${participant.email}</td>
+                                <td style="padding: 12px; border: 1px solid #ddd;">${participant.country}</td>
+                                <td style="padding: 12px; border: 1px solid #ddd;">${participant.referral}</td>
+                                <td style="padding: 12px; border: 1px solid #ddd;">${new Date(participant.entryDate).toLocaleString()}</td>
+                            </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 4px;">
+                    <strong>Total Participants:</strong> ${giveaway.participants.length}<br>
+                    <strong>Spots Remaining:</strong> ${giveaway.maxParticipants - giveaway.participants.length}
+                </div>
+            `;
+
+            modalContent.innerHTML = html;
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+
+        // Enter the $20,000 giveaway
+        function enterBigGiveaway() {
+            showParticipationModal('big-giveaway-20k', '$20,000 Cash Giveaway');
+        }
+
+        // Modified submit participation to handle the big giveaway
+        function submitParticipation(event, giveawayId) {
+            event.preventDefault();
+
+            const name = document.getElementById('participantName').value;
+            const email = document.getElementById('participantEmail').value;
+            const country = document.getElementById('participantCountry').value;
+            const referral = document.getElementById('participantReferral').value;
+
+            // Simple validation
+            if (!name || !email || !country) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Simple email validation
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Handle the $20,000 giveaway separately
+            if (giveawayId === 'big-giveaway-20k') {
+                // Store entry for the big giveaway
+                const entry = {
+                    name: name,
+                    email: email,
+                    country: country,
+                    referral: referral,
+                    timestamp: new Date().toISOString(),
+                    giveaway: '$20,000 Cash Giveaway'
+                };
+
+                // Save to localStorage
+                let bigGiveawayEntries = JSON.parse(localStorage.getItem('bigGiveawayEntries')) || [];
+                bigGiveawayEntries.push(entry);
+                localStorage.setItem('bigGiveawayEntries', JSON.stringify(bigGiveawayEntries));
+
+                // Close modal
+                event.target.closest('div[style*="position: fixed"]').remove();
+
+                // Show special success message for big giveaway
+                showBigGiveawaySuccess(name);
+                return;
+            }
+
+            // Add participant to regular giveaway
+            const giveaways = JSON.parse(localStorage.getItem('giveaways'));
+            const giveawayIndex = giveaways.findIndex(g => g.id === giveawayId);
+            const giveaway = giveaways[giveawayIndex];
+
+            giveaway.participants.push({
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                country: country,
+                referral: referral,
+                entryDate: new Date().toISOString()
+            });
+
+            // Save updated giveaway
+            giveaways[giveawayIndex] = giveaway;
+            localStorage.setItem('giveaways', JSON.stringify(giveaways));
+
+            // Close modal
+            event.target.closest('div[style*="position: fixed"]').remove();
+
+            // Show success message
+            alert('🎉 Successfully entered the giveaway! Good luck!');
+
+            // Refresh views
+            displayAdminGiveaways();
+            displayUserGiveaways();
+        }
+
+        // Show special success message for $20,000 giveaway
+        function showBigGiveawaySuccess(name) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+
+            const modalContent = document.createElement('div');
+            modalContent.style.background = 'white';
+            modalContent.style.padding = '40px';
+            modalContent.style.borderRadius = '12px';
+            modalContent.style.maxWidth = '500px';
+            modalContent.style.textAlign = 'center';
+            modalContent.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.3)';
+
+            modalContent.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 20px;">🎉💰</div>
+                <h2 style="color: #FFD700; margin-bottom: 10px;">Congratulations, ${name}!</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 20px; color: #555;">
+                    You've successfully entered our <strong>$20,000 Cash Giveaway</strong>! 🎊
+                </p>
+                <p style="margin-bottom: 30px; line-height: 1.6;">
+                    The winner will be announced in 30 days. We'll contact you via email if you win!
+                </p>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <strong>Your Entry Details:</strong><br>
+                    Name: ${name}<br>
+                    Prize: $20,000 Cash
+                </div>
+                <button onclick="closeModal(this)" style="background: #FFD700; color: #333; padding: 12px 30px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                    🎉 Got It! 🎉
+                </button>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+
+        // Initialize the page
+        displayAdminGiveaways();
+
+        // Auto-refresh user view every minute to update timers
+        setInterval(() => {
+            if (document.getElementById('user').classList.contains('active')) {
+                displayUserGiveaways();
+            }
+        }, 60000);
+    </script>
+</body>
+
+</html>

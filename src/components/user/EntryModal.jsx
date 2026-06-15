@@ -78,11 +78,9 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const [showConfetti, setShowConfetti] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState('');
     const [whatsappNumber, setWhatsappNumber] = useState('+2347040329721');
     const [formSnapshot, setFormSnapshot] = useState(null);
 
-    // Load WhatsApp number from Firestore
     useEffect(() => {
         const loadNumber = async () => {
             try {
@@ -107,12 +105,11 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     }, [watchedSocial]);
 
     const onSubmit = (values) => {
-        if (selectedPlatforms.length === 0) {
-            setSubmitError('Please follow at least one of our social platforms.');
-            return;
-        }
-        setSubmitError('');
         setIsSubmitting(true);
+
+        const followedPlatforms = selectedPlatforms.length > 0
+            ? selectedPlatforms.join(', ')
+            : 'None selected';
 
         const message =
             `🎉 New Giveaway Entry!\n\n` +
@@ -122,7 +119,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
             `🌍 Country: ${values.country}\n` +
             `🏠 Address: ${values.address}\n` +
             `📣 Heard about us via: ${values.heardAboutUs}\n` +
-            `✅ Follows us on: ${selectedPlatforms.join(', ')}\n` +
+            `✅ Follows us on: ${followedPlatforms}\n` +
             `🎴 Has fan card: ${values.hasFanCard === 'yes' ? 'Yes ✅' : 'No ❌'}\n` +
             `⏳ Fan for: ${values.fanDuration}\n\n` +
             `🏆 Giveaway: ${giveaway?.title || 'Giveaway'}\n` +
@@ -143,7 +140,6 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
         reset();
         setShowConfetti(false);
         setIsSubmitted(false);
-        setSubmitError('');
         setFormSnapshot(null);
         onClose();
     };
@@ -322,7 +318,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                                 {/* 7. Follow us on social media */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                                        Follow us on social media <span className="text-red-400">*</span>
+                                        Follow us on social media
                                     </label>
                                     <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4 grid grid-cols-2 gap-3">
                                         {SOCIAL_PLATFORMS.map((platform) => (
@@ -336,9 +332,6 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                                             </label>
                                         ))}
                                     </div>
-                                    {submitError && (
-                                        <p className="text-red-400 text-xs mt-1.5">{submitError}</p>
-                                    )}
                                 </div>
 
                                 {/* 8. Do you have a fan card */}

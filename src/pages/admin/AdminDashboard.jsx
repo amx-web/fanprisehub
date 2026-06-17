@@ -271,8 +271,9 @@ export function AdminDashboard() {
                                 <div className="flex-1 min-w-0">
                                     <p className="text-white font-semibold text-sm truncate">{g.title || 'Untitled Giveaway'}</p>
                                     <p className="text-gray-500 text-xs mt-0.5">
-                                        {g.currency}{g.prizeAmount?.toLocaleString()} · Ends {formatDateLike(g.endDate)}
+                                        {g.currency}{g.prizeAmount?.toLocaleString()} · {g.participants || 0} participants
                                     </p>
+                                    <p className="text-gray-600 text-xs mt-1">Ends {formatDateLike(g.endDate)}</p>
                                 </div>
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}

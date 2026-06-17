@@ -395,7 +395,7 @@ export function TestimonialPopup() {
             )}
 
             {/* ── Activity popup — bottom-left, all pages ── */}
-            {activityVisible && (
+            {activityVisible && !window.location.pathname.startsWith('/admin') && (
                 <div
                     className="act-popup-enter"
                     style={{

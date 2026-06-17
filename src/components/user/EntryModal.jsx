@@ -226,7 +226,21 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                             <p className="text-xl font-black bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">
                                 ${giveaway?.prizeAmount?.toLocaleString() || '20,000'} waiting for you
                             </p>
+
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => {
+                                    const shareMessage = `🎉 I just entered a giveaway for $${giveaway?.prizeAmount?.toLocaleString() || '20,000'} in cash! 💰\n\nJoin me → ${window.location.origin}/giveaway/${giveaway?.id || ''}\n\nGood luck! 🍀`;
+                                    window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage)}`, '_blank');
+                                }}
+                                className="mt-6 w-full py-3 bg-green-500/20 border border-green-500/40 text-green-400 rounded-xl text-sm font-bold hover:bg-green-500/30 transition"
+                            >
+                                📱 Share on WhatsApp
+                            </motion.button>
+
                             <p className="text-xs text-gray-500 mt-4">Click anywhere to close</p>
+
                         </motion.div>
                     ) : (
                         <>

@@ -103,7 +103,12 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const watchedHasFanCard = watch('hasFanCard');
 
     const selectedPlatforms = useMemo(() => {
-        return SOCIAL_PLATFORMS.filter((p) => watchedSocial?.[p.key]).map((p) => p.label);
+        const platforms = [];
+        if (watchedSocial?.instagram) platforms.push('Instagram');
+        if (watchedSocial?.tiktok) platforms.push('TikTok');
+        if (watchedSocial?.youtube) platforms.push('YouTube');
+        if (watchedSocial?.facebook) platforms.push('Facebook');
+        return platforms;
     }, [watchedSocial]);
 
     const { giveaways } = useGiveawayStore();

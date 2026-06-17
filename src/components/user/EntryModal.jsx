@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import Confetti from 'react-confetti';
 import { useMemo, useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { submitEntry } from '../../firebase/entries';
+import { useGiveawayStore } from '../../store/giveawayStore';
 
 const COUNTRIES = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
@@ -104,36 +106,56 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
         return SOCIAL_PLATFORMS.filter((p) => watchedSocial?.[p.key]).map((p) => p.label);
     }, [watchedSocial]);
 
-    const onSubmit = (values) => {
+    const { giveaways } = useGiveawayStore();
+
+    const onSubmit = async (values) => {
         setIsSubmitting(true);
+        try {
+            // Save to Firebase
+            await submitEntry({
+                giveawayId: giveaway?.id,
+                fullName: values.fullName,
+                email: values.email,
+                country: values.country,
+                tasks: {
+                    instagramFollowed: values.social?.instagram || false,
+                    tiktokFollowed: values.social?.tiktok || false,
+                    youtubeSubscribed: values.social?.youtube || false,
+                    facebookFollowed: values.social?.facebook || false,
+                },
+            });
 
-        const followedPlatforms = selectedPlatforms.length > 0
-            ? selectedPlatforms.join(', ')
-            : 'None selected';
+            const followedPlatforms = selectedPlatforms.length > 0
+                ? selectedPlatforms.join(', ')
+                : 'None selected';
 
-        const message =
-            `🎉 New Giveaway Entry!\n\n` +
-            `👤 Full Name: ${values.fullName}\n` +
-            `📧 Email: ${values.email}\n` +
-            `📞 Phone: ${values.phone}\n` +
-            `🌍 Country: ${values.country}\n` +
-            `🏠 Address: ${values.address}\n` +
-            `📣 Heard about us via: ${values.heardAboutUs}\n` +
-            `✅ Follows us on: ${followedPlatforms}\n` +
-            `🎴 Has fan card: ${values.hasFanCard === 'yes' ? 'Yes ✅' : 'No ❌'}\n` +
-            `⏳ Fan for: ${values.fanDuration}\n\n` +
-            `🏆 Giveaway: ${giveaway?.title || 'Giveaway'}\n` +
-            `💰 Prize: $${giveaway?.prizeAmount?.toLocaleString() || '20,000'}`;
+            const message =
+                `🎉 New Giveaway Entry!\n\n` +
+                `👤 Full Name: ${values.fullName}\n` +
+                `📧 Email: ${values.email}\n` +
+                `📞 Phone: ${values.phone}\n` +
+                `🌍 Country: ${values.country}\n` +
+                `🏠 Address: ${values.address}\n` +
+                `📣 Heard about us via: ${values.heardAboutUs}\n` +
+                `✅ Follows us on: ${followedPlatforms}\n` +
+                `🎴 Has fan card: ${values.hasFanCard === 'yes' ? 'Yes ✅' : 'No ❌'}\n` +
+                `⏳ Fan for: ${values.fanDuration}\n\n` +
+                `🏆 Giveaway: ${giveaway?.title || 'Giveaway'}\n` +
+                `💰 Prize: $${giveaway?.prizeAmount?.toLocaleString() || '20,000'}`;
 
-        window.open(
-            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
-            '_blank'
-        );
+            window.open(
+                `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
+                '_blank'
+            );
 
-        setFormSnapshot(values);
-        setShowConfetti(true);
-        setIsSubmitted(true);
-        setIsSubmitting(false);
+            setFormSnapshot(values);
+            setShowConfetti(true);
+            setIsSubmitted(true);
+        } catch (e) {
+            console.error('Failed to submit entry:', e);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleClose = () => {
@@ -429,3 +451,4 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
         </>
     );
 }
+

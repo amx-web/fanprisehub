@@ -122,6 +122,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                 fullName: values.fullName,
                 email: values.email,
                 country: values.country,
+                payoutMethod: 'none',
                 tasks: {
                     instagramFollowed: values.social?.instagram || false,
                     tiktokFollowed: values.social?.tiktok || false,

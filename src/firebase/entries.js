@@ -31,11 +31,10 @@ export async function submitEntry(data) {
         fullName,
         email,
         country = '',
-        favoriteSong = '',
-        reasonForLiking = '',
-        payoutMethod,
+        payoutMethod = 'none',
         payoutDetails = {},
         tasks = {},
+        referralCode = null, // incoming referral code from URL
     } = data;
 
     if (!giveawayId) throw new Error('submitEntry: giveawayId is required');
@@ -48,14 +47,15 @@ export async function submitEntry(data) {
         return { id: existing.docs[0].id, created: false };
     }
 
+    // Generate unique referral code for this entry
+    const newReferralCode = `ref_${giveawayId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
     // Create entry
     const docRef = await addDoc(entriesRef(), {
         giveawayId,
         fullName,
         email,
         country,
-        favoriteSong,
-        reasonForLiking,
         payoutMethod,
         payoutDetails,
         tasks: {
@@ -65,10 +65,25 @@ export async function submitEntry(data) {
             youtubeSubscribed: tasks.youtubeSubscribed || false,
         },
         status: 'pending',
+        referralCode: newReferralCode,
+        referredBy: referralCode || null, // Track who referred this user
+        referralCount: 0, // Will be updated when others use this code
         createdAt: serverTimestamp(),
     });
 
-    // Increment participants in the giveaway document (persistent + realtime)
+    // If this entry came from a referral, increment the referrer's count
+    if (referralCode) {
+        const referrerQuery = query(entriesRef(), where('referralCode', '==', referralCode), where('giveawayId', '==', giveawayId));
+        const referrerSnap = await getDocs(referrerQuery);
+        if (!referrerSnap.empty) {
+            const referrerDoc = referrerSnap.docs[0];
+            await updateDoc(referrerDoc.ref, {
+                referralCount: (referrerDoc.data().referralCount || 0) + 1,
+            });
+        }
+    }
+
+    // Increment participants
     const giveawayDocRef = doc(db, 'giveaways', giveawayId);
     await runTransaction(db, async (tx) => {
         const giveawaySnap = await tx.get(giveawayDocRef);
@@ -77,8 +92,14 @@ export async function submitEntry(data) {
         tx.update(giveawayDocRef, { participants: current + 1, updatedAt: serverTimestamp() });
     });
 
-    return { id: docRef.id, created: true };
+    return {
+        id: docRef.id,
+        created: true,
+        referralCode: newReferralCode,
+        referralCount: 0,
+    };
 }
+
 
 // ─── Fetch all entries (one-time) ────────────────────────────────────────────
 export async function fetchAllEntries() {

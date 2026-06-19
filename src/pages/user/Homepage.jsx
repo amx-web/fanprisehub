@@ -54,6 +54,7 @@ export function Homepage() {
         <div className="min-h-screen bg-gradient-to-b from-black via-slate-950 to-black">
 
             {/* Hero Section */}
+
             <motion.section
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -69,7 +70,8 @@ export function Homepage() {
                     <motion.div
                         className="absolute top-1/2 -left-40 w-80 h-80 bg-rose-900 rounded-full mix-blend-screen filter blur-3xl opacity-10"
                         animate={{ y: [50, 0, 50], x: [30, 0, 30], scale: [1, 1.2, 1] }}
-                        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 * 0.5 }}
+
                     />
                     <motion.div
                         className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-900 rounded-full mix-blend-screen filter blur-3xl opacity-10"
@@ -103,8 +105,10 @@ export function Homepage() {
                         variants={itemVariants}
                         className="text-lg md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
                     >
-                        Fans worldwide are participating for a chance to receive rewards valued at up to $20,000 USD, with more than $2 million USD in exclusive fan rewards currently being distributed.
+                        Don't miss out. Fans worldwide are claiming prizes up to $20,000 USD right now. We're in the middle of distributing $1 million in exclusive rewards.
+
                     </motion.p>
+
 
                     {/* Stats */}
                     <motion.div
@@ -130,10 +134,12 @@ export function Homepage() {
                     </motion.div>
 
                     {/* CTA Buttons */}
+                    <p className="text-sm font-semibold text-red-400 mb-8">✓ 100% transparent. Real prizes. Real winners.</p>
                     <motion.div
                         variants={itemVariants}
                         className="flex flex-col sm:flex-row gap-4 justify-center items-center"
                     >
+
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -185,7 +191,8 @@ export function Homepage() {
                         <p className="text-gray-300 mt-2 text-sm">Check back soon — new cash giveaways go live regularly.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20" style={{ willChange: 'transform' }}>
+
                         {activeGiveaways.map((giveaway) => (
                             <GiveawayCard key={giveaway.id} giveaway={giveaway} />
                         ))}

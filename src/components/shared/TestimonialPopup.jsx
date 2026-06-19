@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 const DISMISS_MS = 7000;
-const INTERVAL_MS = 15000;
+const INTERVAL_MS = 20000;
+
 const FIRST_DELAY_MS = 8000;
 const ACTIVITY_SHOW_MS = 4000;
 const ACTIVITY_HIDE_MS = 3000;
@@ -193,8 +194,14 @@ export function TestimonialPopup() {
     }
 
     function show() {
+        console.log('[TestimonialPopup] show() called');
+        console.log('[TestimonialPopup] isShowingRef.current:', isShowingRef.current);
+        console.log('[TestimonialPopup] activityActiveRef.current:', activityActiveRef.current);
+        console.log('[TestimonialPopup] visible state:', visible);
+
         // FIX: prevent double show if already visible
         if (isShowingRef.current) return;
+
 
         // FIX: Don't show main popup if activity popup is currently visible
         if (activityActiveRef.current) {
@@ -245,7 +252,12 @@ export function TestimonialPopup() {
     }
 
     function showActivity(person) {
+        console.log('[TestimonialPopup] showActivity() called with person:', person);
+        console.log('[TestimonialPopup] visible:', visible);
+        console.log('[TestimonialPopup] activityActiveRef.current:', activityActiveRef.current);
+
         if (activityActiveRef.current) return;
+
 
         const idx = getRandom(testimonials, lastActIdx.current);
         lastActIdx.current = idx;

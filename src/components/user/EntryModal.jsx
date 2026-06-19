@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import Confetti from 'react-confetti';
 import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import { ChevronDown } from 'lucide-react';
 import { submitEntry } from '../../firebase/entries';
 import { useGiveawayStore } from '../../store/giveawayStore';
@@ -83,7 +85,11 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const [whatsappNumber, setWhatsappNumber] = useState('+2347040329721');
     const [formSnapshot, setFormSnapshot] = useState(null);
 
+    const [searchParams] = useSearchParams();
+    const referralCode = searchParams.get('ref');
+
     useEffect(() => {
+
         const loadNumber = async () => {
             try {
                 const { doc, getDoc } = await import('firebase/firestore');
@@ -119,7 +125,9 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
             // Save to Firebase
             await submitEntry({
                 giveawayId: giveaway?.id,
+                referralCode: referralCode || null,
                 fullName: values.fullName,
+
                 email: values.email,
                 country: values.country,
                 payoutMethod: 'none',
@@ -241,6 +249,45 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                             </motion.button>
 
                             <p className="text-xs text-gray-500 mt-4">Click anywhere to close</p>
+
+                            {/* Referral Section */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="mt-8 pt-8 border-t border-white/10"
+                            >
+                                <p className="text-sm font-bold text-white mb-3">📢 Invite Friends & Increase Your Chances</p>
+                                <p className="text-xs text-gray-400 mb-4">Each person you refer gets you +1 entry. More entries = higher chance to win!</p>
+
+                                <div className="bg-white/[0.05] border border-white/10 rounded-xl p-4 mb-4">
+                                    <p className="text-xs text-gray-500 mb-2">Your Referral Link:</p>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            readOnly
+                                            value={`${window.location.origin}/giveaway/${giveaway?.id}?ref=${formSnapshot?.referralCode || ''}`}
+                                            className="flex-1 px-3 py-2 bg-[#0d0d18] border border-white/10 rounded-lg text-xs text-white truncate"
+                                        />
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(`${window.location.origin}/giveaway/${giveaway?.id}?ref=${formSnapshot?.referralCode || ''}`);
+                                                alert('Link copied!');
+                                            }}
+                                            className="px-3 py-2 bg-red-500/20 border border-red-500/40 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/30 transition"
+                                        >
+                                            Copy
+                                        </motion.button>
+                                    </div>
+                                </div>
+
+                                <div className="text-center">
+                                    <p className="text-lg font-black text-red-400">{formSnapshot?.referralCount || 0}</p>
+                                    <p className="text-xs text-gray-500">people referred</p>
+                                </div>
+                            </motion.div>
 
                         </motion.div>
                     ) : (

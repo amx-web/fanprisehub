@@ -21,7 +21,9 @@ export function GiveawayDetailsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const giveaway = getGiveawayById(id);
-    const isLoading = giveaways.length === 0;
+    const isLoading = !giveaway;
+
+
 
     // Show loading spinner while data is being fetched
     if (isLoading) {

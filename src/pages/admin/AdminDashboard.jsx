@@ -57,6 +57,8 @@ export function AdminDashboard() {
     const [subscriptionError, setSubscriptionError] = useState('');
     const [deletingId, setDeletingId] = useState('');
     const [confirmDeleteId, setConfirmDeleteId] = useState('');
+    const [adminDeleteError, setAdminDeleteError] = useState('');
+
 
     useEffect(() => {
         const loadWhatsapp = async () => {
@@ -155,19 +157,27 @@ export function AdminDashboard() {
     const handleDeleteGiveaway = async (id) => {
         if (confirmDeleteId !== id) {
             setConfirmDeleteId(id);
+            setAdminDeleteError('');
             return;
         }
         setDeletingId(id);
+        setAdminDeleteError('');
+
         try {
             await deleteGiveaway(id);
             setConfirmDeleteId('');
             if (selectedGiveawayId === id) setSelectedGiveawayId('');
         } catch (e) {
             console.error('Failed to delete giveaway:', e);
+            const msg = e?.message
+                ? `Failed to delete giveaway: ${e.message}`
+                : 'Failed to delete giveaway. Please try again.';
+            setAdminDeleteError(msg);
         } finally {
             setDeletingId('');
         }
     };
+
 
     return (
         <div className="w-full max-w-6xl mx-auto space-y-5 sm:space-y-8 px-2 sm:px-0">
@@ -259,6 +269,13 @@ export function AdminDashboard() {
                     <h2 className="text-base sm:text-lg font-bold text-white">Active Giveaways</h2>
                     <p className="text-xs text-gray-500 mt-0.5">Manage or delete active giveaways</p>
                 </div>
+
+                {adminDeleteError ? (
+                    <div className="mx-4 sm:mx-6 my-4 bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl px-4 py-3 text-sm">
+                        {adminDeleteError}
+                    </div>
+                ) : null}
+
 
                 {giveaways.length === 0 ? (
                     <div className="px-6 py-10 text-center">

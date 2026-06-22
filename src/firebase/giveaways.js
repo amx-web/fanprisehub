@@ -2,6 +2,7 @@ import {
     addDoc,
     collection,
     doc,
+    deleteDoc,
     getDoc,
     onSnapshot,
     query,
@@ -14,14 +15,16 @@ import {
 } from 'firebase/firestore';
 
 
+
 import { db } from '../firebaseClient';
+
 
 const COLLECTION = 'giveaways';
 
 const giveawaysRef = () => collection(db, COLLECTION);
 
 export function subscribeToGiveaways(callback) {
-    console.log('[Firestore] subscribeToGiveaways() initialising...');
+
 
     const q = query(giveawaysRef(), orderBy('endDate', 'asc'));
 
@@ -32,16 +35,37 @@ export function subscribeToGiveaways(callback) {
                 const giveaways = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
                 console.log('[Firestore] subscribeToGiveaways() snapshot size:', giveaways.length);
 
-                // Prefer active docs, but never drop docs with missing status.
-                const active = giveaways.filter((g) => !g.status || String(g.status) === 'active' || g.isActive);
+                const nowMs = Date.now();
 
-                const sorted = [...active].sort((a, b) => {
+                const computeIsActive = (g) => {
+                    const status = g.status ? String(g.status) : '';
+                    if (status !== 'active') return false;
+
+                    const endMs = g.endDate?.toDate
+                        ? g.endDate.toDate().getTime()
+                        : new Date(g.endDate).getTime();
+
+                    // If endDate is missing/unparseable, treat as not active.
+                    if (!endMs || Number.isNaN(endMs)) return false;
+
+                    return nowMs <= endMs;
+                };
+
+                // IMPORTANT: Do NOT filter out ended/inactive giveaways.
+                // Admin dashboard needs to see + delete BOTH active and ended giveaways.
+                const withComputed = giveaways.map((g) => ({
+                    ...g,
+                    isActive: computeIsActive(g),
+                }));
+
+                const sorted = [...withComputed].sort((a, b) => {
                     const da = a.endDate?.toDate ? a.endDate.toDate().getTime() : new Date(a.endDate).getTime();
                     const db = b.endDate?.toDate ? b.endDate.toDate().getTime() : new Date(b.endDate).getTime();
                     return da - db;
                 });
 
                 callback(sorted);
+
             } catch (e) {
                 console.error('[Firestore] subscribeToGiveaways() processing error:', e);
                 callback([]);
@@ -66,8 +90,8 @@ export async function addGiveaway(giveaway) {
         ...giveaway,
         // Ensure documents created from admin/form are visible to the app
         status: giveaway?.status ?? 'active',
-        isActive: giveaway?.isActive ?? true,
     };
+
 
     // Convert endDate to Firestore Timestamp before storing
     // Accept Date instances or parsable date strings.
@@ -84,6 +108,7 @@ export async function addGiveaway(giveaway) {
 
     const docRef = await addDoc(giveawaysRef(), prepared);
     return docRef.id;
+
 }
 
 export async function updateGiveaway(giveawayId, updates) {
@@ -103,8 +128,8 @@ export async function updateGiveaway(giveawayId, updates) {
     if (!prepared.updatedAt) prepared.updatedAt = serverTimestamp();
 
     await updateDoc(ref, prepared);
-    console.log('Giveaway updated in Firebase:', giveawayId, updates);
 }
+
 
 export async function deleteGiveaway(giveawayId) {
     if (!giveawayId) throw new Error('deleteGiveaway: giveawayId is required');
@@ -118,11 +143,15 @@ export async function deleteGiveaway(giveawayId) {
     const entriesSnap = await getDocs(q);
     const deletePromises = entriesSnap.docs.map((d) => d.ref.delete());
 
-    // Delete giveaway
-    deletePromises.push(giveawayRef.delete());
+    // Delete giveaway (canonical deleteDoc)
+    deletePromises.push(deleteDoc(giveawayRef));
 
     await Promise.all(deletePromises);
 }
+
+
+
+
 
 
 

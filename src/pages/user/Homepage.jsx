@@ -8,7 +8,7 @@ import { useGiveawayStore } from '../../store/giveawayStore';
 import { GiveawayCard } from '../../components/shared/GiveawayCard';
 import { TrustBadges } from '../../components/shared/TrustBadges';
 import { GiveawayGiveawayImageBanner } from '../../components/user/GiveawayGiveawayImageBanner';
-import { TestimonialPopup } from '../../components/shared/TestimonialPopup';
+
 import { FAQSection } from '../../components/shared/FAQSection';
 
 
@@ -187,11 +187,18 @@ export function Homepage() {
                     </div>
                 ) : activeGiveaways.length === 0 ? (
                     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-                        <p className="text-white font-bold">No active giveaways right now</p>
-                        <p className="text-gray-300 mt-2 text-sm">Check back soon — new cash giveaways go live regularly.</p>
+                        <div className="flex flex-col items-center justify-center px-4 py-10">
+                            <div className="text-red-500 animate-pulse text-2xl md:text-3xl font-black">
+                                🏆 Giveaway Has Ended — Stay Tuned for the Next One!
+                            </div>
+                            <p className="text-gray-300 mt-4 text-sm md:text-base max-w-2xl">
+                                Follow us on social media to be the first to know when the next giveaway drops.
+                            </p>
+                        </div>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20" style={{ willChange: 'transform' }}>
+
 
                         {activeGiveaways.map((giveaway) => (
                             <GiveawayCard key={giveaway.id} giveaway={giveaway} />
@@ -236,7 +243,6 @@ export function Homepage() {
             </motion.section>
 
             {/* Testimonial Popup */}
-            <TestimonialPopup />
 
             <FAQSection />
 

@@ -31,15 +31,27 @@ export function GiveawayDetailsPage() {
     }
 
     if (!giveaway || !giveaway.isActive) {
+        const title = giveaway?.title ?? 'Giveaway';
         return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-white text-2xl font-bold mb-4">Giveaway not found</p>
-                    <p className="text-gray-400">This giveaway is no longer available or has ended.</p>
+            <div className="min-h-screen bg-gradient-to-b from-slate-950 to-black flex items-center justify-center px-4">
+                <div className="max-w-xl w-full text-center">
+                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+                        <span className="text-sm font-bold text-gray-400">ENDED</span>
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl font-black text-white mb-4">{title}</h1>
+                    <p className="text-gray-400 text-lg mb-8">Entries are now closed.</p>
+
+                    <button
+                        className="w-full sm:w-auto px-8 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-xl hover:bg-white/15 transition cursor-pointer"
+                        onClick={() => (window.location.href = '/')}
+                    >
+                        Back to Giveaways
+                    </button>
                 </div>
             </div>
         );
     }
+
 
     // Provide default rules if not available
     const rules = giveaway.rules || [

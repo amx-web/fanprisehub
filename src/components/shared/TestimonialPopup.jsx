@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 
-const DISMISS_MS = 7000;
-const INTERVAL_MS = 20000;
+const DISMISS_MS = 6000;           // top popup visible duration
+const FIRST_DELAY_MS = 13000;      // top popup first appearance
+const TOP_INTERVAL_MIN = 25000;    // top popup repeat range (randomized)
+const TOP_INTERVAL_MAX = 35000;
 
-const FIRST_DELAY_MS = 8000;
-const ACTIVITY_SHOW_MS = 3000;
-const ACTIVITY_HIDE_MS = 8000;
-
+const ACTIVITY_FIRST_DELAY_MS = 4000;  // bottom popup first appearance
+const ACTIVITY_SHOW_MS = 4500;          // bottom popup visible duration
+const ACTIVITY_HIDE_MIN = 8000;         // bottom popup repeat range (randomized)
+const ACTIVITY_HIDE_MAX = 12000;
 
 const testimonials = [
     { name: "Aarav Sharma", code: "in" },
@@ -102,6 +104,10 @@ function getRandom(arr, last) {
     return idx;
 }
 
+function randomInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function launchConfetti(x, y) {
     for (let i = 0; i < 12; i++) {
         const el = document.createElement('div');
@@ -154,9 +160,7 @@ export function TestimonialPopup() {
     const [progress, setProgress] = useState(1);
     const [activityVisible, setActivityVisible] = useState(false);
     const [activityHtml, setActivityHtml] = useState('');
-    // FIX: track whether activity is already showing to prevent double popup
     const activityActiveRef = useRef(false);
-    // FIX: prevent main popup from triggering twice simultaneously
     const isShowingRef = useRef(false);
 
     const lastIdx = useRef(-1);
@@ -175,8 +179,7 @@ export function TestimonialPopup() {
         document.addEventListener('touchstart', onInteract, { once: true });
 
         const startTimer = setTimeout(show, FIRST_DELAY_MS);
-        actRef.current = setTimeout(() => showActivity(testimonials[0]), 5000);
-
+        actRef.current = setTimeout(() => showActivity(testimonials[0]), ACTIVITY_FIRST_DELAY_MS);
 
         return () => {
             clearTimeout(startTimer);
@@ -195,16 +198,8 @@ export function TestimonialPopup() {
     }
 
     function show() {
-        console.log('[TestimonialPopup] show() called');
-        console.log('[TestimonialPopup] isShowingRef.current:', isShowingRef.current);
-        console.log('[TestimonialPopup] activityActiveRef.current:', activityActiveRef.current);
-        console.log('[TestimonialPopup] visible state:', visible);
-
-        // FIX: prevent double show if already visible
         if (isShowingRef.current) return;
 
-
-        // FIX: Don't show main popup if activity popup is currently visible
         if (activityActiveRef.current) {
             clearTimeout(nextRef.current);
             nextRef.current = setTimeout(show, ACTIVITY_SHOW_MS + 500);
@@ -247,18 +242,11 @@ export function TestimonialPopup() {
         }, DISMISS_MS);
 
         clearTimeout(nextRef.current);
-        nextRef.current = setTimeout(show, INTERVAL_MS);
-
-
+        nextRef.current = setTimeout(show, randomInterval(TOP_INTERVAL_MIN, TOP_INTERVAL_MAX));
     }
 
     function showActivity(person) {
-        console.log('[TestimonialPopup] showActivity() called with person:', person);
-        console.log('[TestimonialPopup] visible:', visible);
-        console.log('[TestimonialPopup] activityActiveRef.current:', activityActiveRef.current);
-
         if (activityActiveRef.current) return;
-
 
         const idx = getRandom(testimonials, lastActIdx.current);
         lastActIdx.current = idx;
@@ -272,10 +260,9 @@ export function TestimonialPopup() {
         actRef.current = setTimeout(() => {
             setActivityVisible(false);
             activityActiveRef.current = false;
-            actRef.current = setTimeout(() => showActivity(at), ACTIVITY_HIDE_MS);
+            actRef.current = setTimeout(() => showActivity(at), randomInterval(ACTIVITY_HIDE_MIN, ACTIVITY_HIDE_MAX));
         }, ACTIVITY_SHOW_MS);
     }
-
 
     function close() {
         clearAll();
@@ -327,7 +314,6 @@ export function TestimonialPopup() {
                         position: 'fixed',
                         top: '68px',
                         right: '12px',
-                        // FIX: smaller on mobile so it doesn't clash
                         width: mobile ? '160px' : '200px',
                         background: '#13131a',
                         border: '1px solid rgba(255,255,255,0.09)',
@@ -413,7 +399,6 @@ export function TestimonialPopup() {
                     className="act-popup-enter"
                     style={{
                         position: 'fixed',
-                        // FIX: on mobile move it up slightly so it clears nav bars
                         bottom: mobile ? '20px' : '16px',
                         left: '12px',
                         background: '#1a1a24',
@@ -423,7 +408,6 @@ export function TestimonialPopup() {
                         borderRadius: '10px',
                         fontSize: mobile ? '10px' : '11px',
                         color: 'rgba(255,255,255,0.75)',
-                        // FIX: limit width on mobile to avoid overflow
                         maxWidth: mobile ? '180px' : '220px',
                         zIndex: 9998,
                         pointerEvents: 'none',
@@ -436,3 +420,4 @@ export function TestimonialPopup() {
         </>
     );
 }
+

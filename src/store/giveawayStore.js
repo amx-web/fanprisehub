@@ -28,13 +28,12 @@ export const useGiveawayStore = create((set) => ({
 
 
     updateGiveaway: async (giveawayId, updates) => {
-        console.log('Updating giveaway in store:', giveawayId, updates);
         await updateGiveawayService(giveawayId, updates);
         set((state) => ({
             giveaways: state.giveaways.map((g) => (g.id === giveawayId ? { ...g, ...updates } : g)),
         }));
-        console.log('Giveaway updated successfully in store:', updates);
     },
+
 
     deleteGiveaway: async (id) => {
         // Keep UI responsive only after Firestore deletion succeeds

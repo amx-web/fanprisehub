@@ -10,6 +10,22 @@ const ACTIVITY_SHOW_MS = 4500;          // bottom popup visible duration
 const ACTIVITY_HIDE_MIN = 8000;         // bottom popup repeat range (randomized)
 const ACTIVITY_HIDE_MAX = 12000;
 
+const TIME_LABELS = [
+    'just now',
+    'seconds ago',
+    '2 minutes ago',
+    '5 minutes ago',
+    '12 minutes ago',
+    'moments ago',
+    '23 minutes ago',
+    '1 hour ago',
+    '2 hours ago',
+    'a few hours ago',
+    'yesterday',
+    '2 days ago',
+    '3 days ago',
+];
+
 const testimonials = [
     { name: "Aarav Sharma", code: "in" },
     { name: "Priya Patel", code: "in" },
@@ -47,9 +63,50 @@ const testimonials = [
     { name: "Hannah Schmidt", code: "de" },
     { name: "Lucas Dubois", code: "fr" },
     { name: "Camille Martin", code: "fr" },
-    { name: "Sipho Dlamini", code: "za" },
-    { name: "Mateo Gonzalez", code: "ar" },
-    { name: "Santiago Reyes", code: "co" },
+
+    // Additional diverse countries (not well represented)
+    { name: "Chidera Okafor", code: "ng" },
+    { name: "Amaka Eze", code: "ng" },
+    { name: "Thandiwe Mokoena", code: "za" },
+    { name: "Sipho Ndlovu", code: "za" },
+    { name: "Noah Campbell", code: "ca" },
+    { name: "Sophia Nguyen", code: "ca" },
+    { name: "Giulia Romano", code: "it" },
+    { name: "Marco Bianchi", code: "it" },
+    { name: "Lucía Torres", code: "es" },
+    { name: "David Martínez", code: "es" },
+    { name: "Noor de Vries", code: "nl" },
+    { name: "Samir Jansen", code: "nl" },
+    { name: "Ji-min Park", code: "kr" },
+    { name: "Min-woo Kim", code: "kr" },
+    { name: "Valentina Fernández", code: "ar" },
+    { name: "Mateo González", code: "ar" },
+    { name: "Camilo Ríos", code: "co" },
+    { name: "Sofía Gutiérrez", code: "co" },
+    { name: "Agnieszka Kowalska", code: "pl" },
+    { name: "Krzysztof Nowak", code: "pl" },
+    { name: "Ebba Svensson", code: "se" },
+    { name: "Oskar Lindgren", code: "se" },
+    { name: "Aksel Johansen", code: "no" },
+    { name: "Ingrid Berg", code: "no" },
+    { name: "Noa Cohen", code: "il" },
+    { name: "Eitan Levi", code: "il" },
+    { name: "Ava Williams", code: "nz" },
+    { name: "Oliver Wright", code: "nz" },
+    { name: "Isabella Rojas", code: "cl" },
+    { name: "Diego Poblete", code: "cl" },
+    { name: "Rita Ferreira", code: "pt" },
+    { name: "Miguel Santos", code: "pt" },
+    { name: "Emma Van den Broeck", code: "be" },
+    { name: "Lukas Vermeulen", code: "be" },
+    { name: "Anna Horváth", code: "hu" },
+    { name: "Gábor Nagy", code: "hu" },
+    { name: "Barbora Nováková", code: "cz" },
+    { name: "Ondřej Svoboda", code: "cz" },
+    { name: "Andreea Ionescu", code: "ro" },
+    { name: "Mihai Popescu", code: "ro" },
+
+    // Keep existing extras
     { name: "Oleksandr Koval", code: "ua" },
     { name: "Nguyen Van Minh", code: "vn" },
     { name: "Ahmet Yilmaz", code: "tr" },
@@ -59,6 +116,7 @@ const testimonials = [
     { name: "Liam Henderson", code: "au" },
     { name: "Chloe Williams", code: "au" },
 ];
+
 
 const quotes = [
     "I couldn't believe it when they knocked on my door 😭 the <strong>$20,000 cash</strong> was delivered right to my doorstep. Still in shock!!",
@@ -213,7 +271,9 @@ export function TestimonialPopup() {
         const t = testimonials[idx];
         const q = quotes[Math.floor(Math.random() * quotes.length)];
 
-        setCurrent({ ...t, quote: q });
+        const timeLabel = TIME_LABELS[Math.floor(Math.random() * TIME_LABELS.length)];
+        setCurrent({ ...t, quote: q, timeLabel });
+
         setProgress(1);
         setVisible(true);
 
@@ -363,14 +423,20 @@ export function TestimonialPopup() {
                         ★★★★★
                     </div>
 
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '3px',
-                        background: 'rgba(255,210,0,0.12)', border: '1px solid rgba(255,210,0,0.25)',
-                        color: '#ffd200', fontSize: '9px', fontWeight: 600,
-                        padding: '1px 6px', borderRadius: '20px', marginTop: '3px',
-                    }}>
-                        ✓ Verified Winner
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px', flexWrap: 'wrap' }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '3px',
+                            background: 'rgba(255,210,0,0.12)', border: '1px solid rgba(255,210,0,0.25)',
+                            color: '#ffd200', fontSize: '9px', fontWeight: 600,
+                            padding: '1px 6px', borderRadius: '20px',
+                        }}>
+                            ✓ Verified Winner
+                        </div>
+                        <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
+                            {current.timeLabel}
+                        </span>
                     </div>
+
 
                     <div
                         style={{

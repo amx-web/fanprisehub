@@ -61,17 +61,17 @@ export function AdminDashboard() {
 
 
     useEffect(() => {
-        const loadWhatsapp = async () => {
+        const loadTelegram = async () => {
             try {
                 const snap = await getDoc(doc(db, 'config', 'settings'));
-                if (snap.exists() && snap.data().whatsappNumber) {
-                    setWhatsappNumber(snap.data().whatsappNumber);
+                if (snap.exists() && snap.data().telegramUsername) {
+                    setTelegramUsername(snap.data().telegramUsername);
                 }
             } catch (e) {
-                console.warn('Failed to load WhatsApp number:', e);
+                console.warn('Failed to load Telegram username:', e);
             }
         };
-        loadWhatsapp();
+        loadTelegram();
 
         let unsubEntries = null;
         let unsubGiveaways = null;
@@ -149,9 +149,12 @@ export function AdminDashboard() {
     const [addingWinnerPrize, setAddingWinnerPrize] = useState('');
     const [savingWinner, setSavingWinner] = useState(false);
     const [savingGiveaway, setSavingGiveaway] = useState(false);
-    const [whatsappNumber, setWhatsappNumber] = useState('');
-    const [savingWhatsapp, setSavingWhatsapp] = useState(false);
-    const [whatsappSaved, setWhatsappSaved] = useState(false);
+    const [telegramUsername, setTelegramUsername] = useState('');
+
+    const telegramUsernameClean = String(telegramUsername || '').replace(/^@/, '');
+    const [savingTelegram, setSavingTelegram] = useState(false);
+    const [telegramSaved, setTelegramSaved] = useState(false);
+
 
 
     const handleDeleteGiveaway = async (id) => {
@@ -461,7 +464,9 @@ export function AdminDashboard() {
                 </div>
             </motion.div>
 
-            {/* WhatsApp Number Manager */}
+            {/* Telegram Username Manager */}
+
+            {/** TODO: rename remaining WhatsApp fields/handlers to telegramUsername */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -469,18 +474,18 @@ export function AdminDashboard() {
                 className="bg-[#0d0d18] border border-purple-500/10 rounded-2xl overflow-hidden"
             >
                 <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-purple-500/10">
-                    <h2 className="text-base sm:text-lg font-bold text-white">WhatsApp Number</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Number that receives giveaway entry messages</p>
+                    <h2 className="text-base sm:text-lg font-bold text-white">Telegram Username</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">Telegram username that receives giveaway entry messages</p>
                 </div>
                 <div className="p-4 sm:p-6 space-y-4">
                     <div>
                         <label className="block text-xs uppercase tracking-widest text-gray-500 font-semibold mb-2">
-                            WhatsApp Number (include + and country code)
+                            Telegram Username (no @, e.g. Fanprizehub)
                         </label>
                         <input
                             type="text"
-                            value={whatsappNumber}
-                            onChange={(e) => { setWhatsappNumber(e.target.value); setWhatsappSaved(false); }}
+                            value={telegramUsername}
+                            onChange={(e) => { setTelegramUsername(e.target.value); setTelegramSaved(false); }}
                             className="w-full px-4 py-3 bg-[#0d0d18] border border-purple-500/15 rounded-xl text-white text-sm focus:border-purple-500/40 focus:outline-none transition"
                             placeholder="e.g. +2347040329721"
                         />
@@ -488,18 +493,19 @@ export function AdminDashboard() {
                     <motion.button
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
-                        disabled={savingWhatsapp || !whatsappNumber.trim()}
+                        disabled={savingTelegram || !telegramUsername.trim()}
                         onClick={async () => {
-                            setSavingWhatsapp(true);
+                            setSavingTelegram(true);
                             try {
                                 await setDoc(doc(db, 'config', 'settings'), {
-                                    whatsappNumber: whatsappNumber.trim()
+                                    telegramUsername: telegramUsername.replace(/^@/, '').trim(),
                                 }, { merge: true });
-                                setWhatsappSaved(true);
+                                setTelegramSaved(true);
                             } catch (e) {
-                                console.warn('Failed to save WhatsApp number:', e);
+                                console.warn('Failed to save Telegram username:', e);
+
                             } finally {
-                                setSavingWhatsapp(false);
+                                setSavingTelegram(false);
                             }
                         }}
                         className="w-full py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-sm font-bold hover:bg-emerald-500/20 transition disabled:opacity-60 disabled:cursor-not-allowed"

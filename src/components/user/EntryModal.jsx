@@ -58,6 +58,19 @@ const FAN_DURATION_OPTIONS = [
     'Less than 1 month', '1–6 months', '6–12 months', '1–3 years', '3+ years',
 ];
 
+// NEW: checks both the status field and endDate to determine if a giveaway has ended
+function isGiveawayEnded(giveaway) {
+    if (!giveaway) return false;
+    if (giveaway.status && giveaway.status !== 'active') return true;
+    if (giveaway.endDate) {
+        const endDate = giveaway.endDate.toDate
+            ? giveaway.endDate.toDate()
+            : new Date(giveaway.endDate);
+        if (endDate < new Date()) return true;
+    }
+    return false;
+}
+
 export function EntryModal({ giveaway, isOpen, onClose }) {
     const {
         register,
@@ -82,26 +95,37 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const [showConfetti, setShowConfetti] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [whatsappNumber, setWhatsappNumber] = useState('+2347040329721');
+    const TELEGRAM_USERNAME = 'Fanprizehub';
+    const [telegramUsername, setTelegramUsername] = useState(TELEGRAM_USERNAME);
     const [formSnapshot, setFormSnapshot] = useState(null);
 
     const [searchParams] = useSearchParams();
     const referralCode = searchParams.get('ref');
 
-    useEffect(() => {
+    // NEW: evaluate once per render
+    const ended = isGiveawayEnded(giveaway);
 
+    useEffect(() => {
         const loadNumber = async () => {
             try {
                 const { doc, getDoc } = await import('firebase/firestore');
                 const { db } = await import('../../firebaseClient');
                 const snap = await getDoc(doc(db, 'config', 'settings'));
+
+                if (snap.exists() && snap.data().telegramUsername) {
+                    setTelegramUsername(snap.data().telegramUsername);
+                    return;
+                }
+
+                // Backward compatibility
                 if (snap.exists() && snap.data().whatsappNumber) {
-                    setWhatsappNumber(snap.data().whatsappNumber);
+                    setTelegramUsername(snap.data().whatsappNumber);
                 }
             } catch (e) {
-                console.warn('Failed to load WhatsApp number, using default:', e);
+                console.warn('Failed to load Telegram username, using default:', e);
             }
         };
+
         loadNumber();
     }, []);
 
@@ -120,6 +144,11 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const { giveaways } = useGiveawayStore();
 
     const onSubmit = async (values) => {
+        // NEW: defense-in-depth guard, blocks submission even if UI state is stale
+        if (isGiveawayEnded(giveaway)) {
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             // Save to Firebase
@@ -157,10 +186,12 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                 `🏆 Giveaway: ${giveaway?.title || 'Giveaway'}\n` +
                 `💰 Prize: $${giveaway?.prizeAmount?.toLocaleString() || '20,000'}`;
 
-            window.open(
-                `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
-                '_blank'
-            );
+            const telegramUsernameClean = String(telegramUsername || '').replace(/^@/, '');
+            const telegramUrl = `https://t.me/${telegramUsernameClean}?text=${encodeURIComponent(message)}`;
+            console.log('[EntryModal] telegramUsername:', telegramUsername);
+            console.log('[EntryModal] telegramUsernameClean:', telegramUsernameClean);
+            console.log('[EntryModal] telegramUrl:', telegramUrl);
+            window.open(telegramUrl, '_blank');
 
             setFormSnapshot(values);
             setShowConfetti(true);
@@ -222,14 +253,14 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                             </motion.div>
                             <h2 className="text-3xl font-black text-white mb-2">You're In!</h2>
                             <p className="text-gray-400 mb-4">
-                                Your entry has been sent via WhatsApp. Good luck!
+                                Your entry has been sent via Telegram. Good luck!
                             </p>
                             <p className="text-green-400 font-bold mb-4">
-                                ✅ WhatsApp opened with your entry details.
+                                ✅ Telegram opened with your entry details.
                             </p>
                             {formSnapshot?.hasFanCard === 'yes' && (
                                 <p className="text-yellow-400 font-bold mb-4 text-sm">
-                                    📎 Don't forget to send your fan card photo in the WhatsApp chat!
+                                    📎 Don't forget to send your fan card photo in the Telegram chat!
                                 </p>
                             )}
                             <p className="text-xl font-black bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">
@@ -241,11 +272,13 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => {
                                     const shareMessage = `🎉 I just entered a giveaway for $${giveaway?.prizeAmount?.toLocaleString() || '20,000'} in cash! 💰\n\nJoin me → ${window.location.origin}/giveaway/${giveaway?.id || ''}\n\nGood luck! 🍀`;
-                                    window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage)}`, '_blank');
+                                    const referralLink = `${window.location.origin}/giveaway/${giveaway?.id || ''}`;
+                                    const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareMessage)}`;
+                                    window.open(telegramShareUrl, '_blank');
                                 }}
                                 className="mt-6 w-full py-3 bg-green-500/20 border border-green-500/40 text-green-400 rounded-xl text-sm font-bold hover:bg-green-500/30 transition"
                             >
-                                📱 Share on WhatsApp
+                                📱 Share on Telegram
                             </motion.button>
 
                             <p className="text-xs text-gray-500 mt-4">Click anywhere to close</p>
@@ -290,6 +323,21 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                             </motion.div>
 
                         </motion.div>
+                    ) : ended ? (
+                        <div className="text-center py-10">
+                            <div className="text-5xl mb-4">⏰</div>
+                            <h2 className="text-2xl font-black text-white mb-2">This Giveaway Has Ended</h2>
+                            <p className="text-gray-400 mb-6 text-sm">
+                                Applications are no longer being accepted for this giveaway.
+                                Check back soon for new giveaways!
+                            </p>
+                            <button
+                                onClick={handleClose}
+                                className="w-full py-3 bg-white text-black rounded-2xl text-sm font-bold hover:bg-gray-100 transition"
+                            >
+                                Close
+                            </button>
+                        </div>
                     ) : (
                         <>
                             <div className="mb-6">
@@ -465,7 +513,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                                             />
                                             {errors.fanCardPhoto && <p className="text-red-400 text-xs mt-1.5">{errors.fanCardPhoto.message}</p>}
                                             <p className="text-gray-500 text-xs mt-1.5">
-                                                📎 After submitting, please also send this photo directly in the WhatsApp chat.
+                                                📎 After submitting, please also send this photo directly in the Telegram chat.
                                             </p>
                                         </div>
                                     )}
@@ -500,7 +548,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                                         : 'bg-white text-black hover:bg-gray-100'
                                         }`}
                                 >
-                                    {isSubmitting ? 'Opening WhatsApp...' : 'Claim My Reward →'}
+                                    {isSubmitting ? 'Opening Telegram...' : 'Claim My Reward →'}
                                 </motion.button>
 
                                 <button
@@ -518,4 +566,3 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
         </>
     );
 }
-

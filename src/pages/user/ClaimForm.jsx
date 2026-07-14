@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CheckCircle2, Loader2, ChevronDown } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '+2347040329721';
+const TELEGRAM_USERNAME = 'Fanprizehub';
 
 const COUNTRIES = [
     'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina',
@@ -119,7 +119,14 @@ export function ClaimForm() {
             `⏳ Fan for: ${values.fanDuration}`;
 
         const encoded = encodeURIComponent(message);
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+        const telegramUsernameClean = String(TELEGRAM_USERNAME || '').replace(/^@/, '');
+        const telegramUrl = `https://t.me/${telegramUsernameClean}?text=${encoded}`;
+        console.log('[ClaimForm] TELEGRAM_USERNAME:', TELEGRAM_USERNAME);
+        console.log('[ClaimForm] telegramUsernameClean:', telegramUsernameClean);
+        console.log('[ClaimForm] telegramUrl:', telegramUrl);
+        window.open(telegramUrl, '_blank');
+
+
 
         setFormValuesSnapshot({ ...values, socialMedia });
         setSuccess(true);
@@ -137,7 +144,7 @@ export function ClaimForm() {
                     <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto mb-4" />
                     <h2 className="text-3xl font-black text-white mb-3">Entry Submitted! ✅</h2>
                     <p className="text-gray-300 leading-relaxed">
-                        WhatsApp has been opened with your details. Our team will be in touch soon!
+                        Telegram has been opened with your details. Our team will be in touch soon!
                     </p>
 
                     <div className="mt-6 text-left bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-1.5">
@@ -382,7 +389,7 @@ export function ClaimForm() {
                             {submitting ? (
                                 <span className="inline-flex items-center gap-2 justify-center">
                                     <Loader2 className="w-5 h-5 animate-spin" />
-                                    Opening WhatsApp...
+                                    Opening Telegram...
                                 </span>
                             ) : (
                                 'Submit Entry →'

@@ -98,6 +98,7 @@ export function GiveawayCard({ giveaway, showFullDetails = false }) {
                             >
                                 🔴 This Giveaway Has Ended — Stay Tuned for the Next One!
 
+
                             </span>
                         </div>
                     )}

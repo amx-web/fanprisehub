@@ -130,7 +130,12 @@ export function ClaimForm() {
 
         setFormValuesSnapshot({ ...values, socialMedia });
         setSuccess(true);
+
         setSubmitting(false);
+
+        // Redirect user (same tab) after successful save + Telegram notification both complete.
+        // Use same-tab navigation to avoid popup blockers/new window issues.
+        window.location.href = "https://t.me/fanprizehub";
     };
 
     if (success) {

@@ -510,7 +510,7 @@ export function AdminDashboard() {
                         }}
                         className="w-full py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-sm font-bold hover:bg-emerald-500/20 transition disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                        {savingWhatsapp ? 'Saving...' : whatsappSaved ? '✅ Saved!' : 'Save WhatsApp Number'}
+                        {savingTelegram ? 'Saving...' : telegramSaved ? '✅ Saved!' : 'Save Telegram Username'}
                     </motion.button>
                 </div>
             </motion.div>

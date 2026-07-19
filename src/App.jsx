@@ -22,6 +22,10 @@ function RequireAdmin({ children }) {
     return isAdmin ? children : <Navigate to="/admin/login" replace />;
 }
 
+
+
+
+
 function App() {
     return (
         <BrowserRouter>
@@ -42,18 +46,23 @@ function App() {
 
                 {/* Admin Routes */}
                 <Route
+                    path="/admin"
                     element={
                         <RequireAdmin>
                             <AdminLayout />
                         </RequireAdmin>
                     }
                 >
-                    <Route path="/admin" element={<AdminDashboard />} />
-                    <Route path="/admin/applicants" element={<ApplicantsPage />} />
-                    <Route path="/admin/winners" element={<AdminWinnersPage />} />
-                    <Route path="/admin/email-template" element={<EmailTemplateSettingsPage />} />
-                    <Route path="/admin/create" element={<CreateGiveaway />} />
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="applicants" element={<ApplicantsPage />} />
+                    <Route path="winners" element={<AdminWinnersPage />} />
+                    <Route path="email-template" element={<EmailTemplateSettingsPage />} />
+                    <Route path="create" element={<CreateGiveaway />} />
                 </Route>
+
+
+
+
 
                 {/* Catch All */}
                 <Route path="*" element={<Navigate to="/" replace />} />

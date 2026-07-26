@@ -95,6 +95,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
     const [showConfetti, setShowConfetti] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [confirmedSent, setConfirmedSent] = useState(false);
     const TELEGRAM_USERNAME = 'Fanprizehub';
     const [telegramUsername, setTelegramUsername] = useState(TELEGRAM_USERNAME);
     const [formSnapshot, setFormSnapshot] = useState(null);
@@ -208,6 +209,7 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
         setShowConfetti(false);
         setIsSubmitted(false);
         setFormSnapshot(null);
+        setConfirmedSent(false);
         onClose();
     };
 
@@ -236,7 +238,61 @@ export function EntryModal({ giveaway, isOpen, onClose }) {
                     onClick={(e) => e.stopPropagation()}
                     className="bg-black/60 border border-white/10 backdrop-blur-2xl rounded-3xl p-6 md:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
                 >
-                    {isSubmitted ? (
+                    {isSubmitted && !confirmedSent ? (
+                        <motion.div
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ type: 'spring', stiffness: 200 }}
+                            className="text-center py-10"
+                        >
+                            <div className="text-5xl mb-4">📤</div>
+                            <h2 className="text-3xl font-black text-white mb-3">Almost done!</h2>
+                            <p className="text-gray-300 mb-2 text-sm leading-relaxed">
+                                We've opened Telegram with your details pre-filled. Please press <strong className="text-white">Send</strong> inside Telegram to complete your entry.
+                            </p>
+
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setConfirmedSent(true)}
+                                className="mt-6 w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-gray-100 transition-all duration-200 shadow-xl text-base"
+                            >
+                                I've sent my details on Telegram
+                            </motion.button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const values = formSnapshot;
+                                    if (!values) return;
+                                    const followedPlatforms = selectedPlatforms.length > 0
+                                        ? selectedPlatforms.join(', ')
+                                        : 'None selected';
+                                    const message =
+                                        `🎉 New Giveaway Entry!\n\n` +
+                                        `👤 Full Name: ${values.fullName}\n` +
+                                        `📧 Email: ${values.email}\n` +
+                                        `📞 Phone: ${values.phone}\n` +
+                                        `🌍 Country: ${values.country}\n` +
+                                        `🏠 Address: ${values.address}\n` +
+                                        `📣 Heard about us via: ${values.heardAboutUs}\n` +
+                                        `✅ Follows us on: ${followedPlatforms}\n` +
+                                        `🎴 Has fan card: ${values.hasFanCard === 'yes' ? 'Yes ✅' : 'No ❌'}\n` +
+                                        `⏳ Fan for: ${values.fanDuration}\n\n` +
+                                        `🏆 Giveaway: ${giveaway?.title || 'Giveaway'}\n` +
+                                        `💰 Prize: $${giveaway?.prizeAmount?.toLocaleString() || '20,000'}`;
+                                    const username = String(telegramUsername || '').replace(/^@/, '');
+                                    const url = `https://t.me/${username}?text=${encodeURIComponent(message)}`;
+                                    window.open(url, '_blank');
+                                }}
+                                className="mt-3 w-full py-2.5 text-sm text-gray-400 hover:text-white transition-colors underline underline-offset-2"
+                            >
+                                Reopen Telegram
+                            </button>
+
+                            <p className="text-xs text-gray-500 mt-6">After sending, click the button above to continue</p>
+                        </motion.div>
+                    ) : isSubmitted && confirmedSent ? (
                         <motion.div
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}

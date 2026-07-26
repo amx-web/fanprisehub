@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PrizeCard } from '../../components/shared/PrizeCard';
 import { CountdownTimer } from '../../components/shared/CountdownTimer';
 import { EntryModal } from '../../components/user/EntryModal';
@@ -21,6 +21,12 @@ export function GiveawayDetailsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const giveaway = getGiveawayById(id);
+
+    useEffect(() => {
+        if (giveaway && giveaway.isActive) {
+            setIsModalOpen(true);
+        }
+    }, [giveaway]);
     const isLoading = !giveaway;
 
 

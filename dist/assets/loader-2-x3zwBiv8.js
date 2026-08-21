@@ -1,0 +1,1 @@
+import{f as e}from"./index-BfPFw5dc.js";var t=e(`CheckCircle2`,[[`circle`,{cx:`12`,cy:`12`,r:`10`,key:`1mglay`}],[`path`,{d:`m9 12 2 2 4-4`,key:`dzmm74`}]]),n=e(`Loader2`,[[`path`,{d:`M21 12a9 9 0 1 1-6.219-8.56`,key:`13zald`}]]);export{t as n,n as t};

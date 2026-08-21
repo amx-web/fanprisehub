@@ -134,19 +134,8 @@ export async function updateGiveaway(giveawayId, updates) {
 export async function deleteGiveaway(giveawayId) {
     if (!giveawayId) throw new Error('deleteGiveaway: giveawayId is required');
 
-    // Delete giveaway + all related entries
     const giveawayRef = doc(db, COLLECTION, giveawayId);
-    const entriesRef = collection(db, 'entries');
-    const q = query(entriesRef, where('giveawayId', '==', giveawayId));
-
-    // Delete entries first so we don't leave orphan entries
-    const entriesSnap = await getDocs(q);
-    const deletePromises = entriesSnap.docs.map((d) => d.ref.delete());
-
-    // Delete giveaway (canonical deleteDoc)
-    deletePromises.push(deleteDoc(giveawayRef));
-
-    await Promise.all(deletePromises);
+    await deleteDoc(giveawayRef);
 }
 
 

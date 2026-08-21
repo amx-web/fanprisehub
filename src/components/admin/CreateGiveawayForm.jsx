@@ -3,9 +3,23 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useGiveawayStore } from '../../store/giveawayStore';
 
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebaseClient';
+const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
+    const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+    );
+
+    if (!response.ok) {
+        throw new Error('Failed to upload image to Cloudinary');
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+};
 
 export function CreateGiveawayForm() {
     const { addGiveaway } = useGiveawayStore();
@@ -45,18 +59,9 @@ export function CreateGiveawayForm() {
             if (imageFile) {
                 setUploadingImage(true);
                 try {
-                    // Deterministic path per upload
-                    const fileExt = imageFile.name?.split('.').pop() || 'png';
-                    const safeName = (imageFile.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '_');
-                    const path = `giveaway-images/${Date.now()}-${safeName}.${fileExt}`;
-                    const storageRef = ref(storage, path);
-
-                    const snapshot = await uploadBytes(storageRef, imageFile, {
-                        contentType: imageFile.type || 'application/octet-stream',
-                    });
-                    uploadedImageUrl = await getDownloadURL(snapshot.ref);
+                    uploadedImageUrl = await uploadImageToCloudinary(imageFile);
                 } catch (e) {
-                    console.error('[Storage] Failed to upload giveaway image:', e);
+                    console.error('[Cloudinary] Failed to upload giveaway image:', e);
                     setImageError('Image upload failed. Please try again.');
                     setSubmitting(false);
                     setUploadingImage(false);
